@@ -29,6 +29,13 @@ int main(void)
 	define_led(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
 
 
+	/*Enable the LED in open drain configuration (low current, low LED intensity)*/
+//	define_led(&green_led, GPIOD, 12, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
+//	define_led(&orange_led, GPIOD, 13, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
+//	define_led(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
+//	define_led(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
+
+
 
 	GPIO_CLKCtrl(GPIOD,ENABLE);
 

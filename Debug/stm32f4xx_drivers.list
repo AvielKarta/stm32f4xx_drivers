@@ -37,13 +37,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  16 .debug_macro  000012c5  00000000  00000000  00011240  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   000009f6  00000000  00000000  00012505  2**0
+ 17 .debug_line   000009f8  00000000  00000000  00012505  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00004fba  00000000  00000000  00012efb  2**0
+ 18 .debug_str    00004fba  00000000  00000000  00012efd  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  00017eb5  2**0
+ 19 .comment      0000007b  00000000  00000000  00017eb7  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000001fc  00000000  00000000  00017f30  2**2
+ 20 .debug_frame  000001fc  00000000  00000000  00017f34  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -171,6 +171,8 @@ int main(void)
  800027c:	220f      	movs	r2, #15
  800027e:	4917      	ldr	r1, [pc, #92]	; (80002dc <main+0xc8>)
  8000280:	f000 f9c2 	bl	8000608 <define_led>
+//	define_led(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
+//	define_led(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
 
 
 

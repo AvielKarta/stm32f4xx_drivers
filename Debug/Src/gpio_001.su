@@ -1,0 +1,2 @@
+gpio_001.c:11:6:delay	16	static
+gpio_001.c:17:5:main	40	static

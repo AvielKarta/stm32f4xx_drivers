@@ -85,8 +85,8 @@ void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number);
 void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnOrDi);
 void GPIO_IRQHandle(uint8_t PinNumber);
 
-//4.Led control
-void define_led(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int speed, int push_pull,int pull_up_down);
+//4.GPIO control
+void configure_gpio_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
 
 #endif /* INC_STM32F407XX_GPIO_DRIVER_H_ */
 

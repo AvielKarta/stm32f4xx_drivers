@@ -56,7 +56,6 @@ void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi)
 	}
 
 }
-
 //2.Initialize and deInitialize
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {
@@ -75,10 +74,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	else
 	{
 		//Interrupt mode
-
 	}
-
-
 	/*2. Configure GPIO pin speed - each pin has 2 dedicated bits in the GPIO mode register
 	hence the value is shifted as multiplication  of 2 relative to pin # */
 	temp = (pGPIOHandle->GPIO_PinCfng.PinSpeed << (2* pGPIOHandle->GPIO_PinCfng.PinNumber));
@@ -175,7 +171,6 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 		GPIOI_RST();
 	}
 }
-
 //3.Data read\write
 uint8_t GPIO_ReadPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
@@ -216,16 +211,14 @@ void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number)
 }
 
 //4.LedController
-void define_led(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int speed, int push_pull,int pull_up_down)
+void configure_gpio_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
 {
 	GpioLed->pGPIOx = gpio;
 	GpioLed->GPIO_PinCfng.PinNumber = pin_number;
 	GpioLed->GPIO_PinCfng.PinMode = output_mode;
-	GpioLed->GPIO_PinCfng.PinSpeed = speed;
-	GpioLed->GPIO_PinCfng.PinOType = push_pull;
-	GpioLed->GPIO_PinCfng.PinPuPdCtrl = pull_up_down;
-
-
+	GpioLed->GPIO_PinCfng.PinSpeed = pin_speed;
+	GpioLed->GPIO_PinCfng.PinOType = pin_out_mode;
+	GpioLed->GPIO_PinCfng.PinPuPdCtrl = internal_resistor_state;
 }
 
 

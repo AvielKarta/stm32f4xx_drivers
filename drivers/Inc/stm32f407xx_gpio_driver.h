@@ -1,8 +1,6 @@
 /*
- * stm32f407xx_gpio_driver.h
- *
- *  Created on: Jan 4, 2020
- *      Author: Aviel karta
+ * 		stm32f407xx_gpio_driver.h
+ *      Author:  Aviel karta
  */
 
 #ifndef INC_STM32F407XX_GPIO_DRIVER_H_
@@ -22,9 +20,9 @@
 #define 	GPIO_MODE_ANALOG	3			/*GPIO Output analog mode*/
 
 //Interrupt modes
-#define 	GPIO_MODE_IN_FT		4			/*GPIO Input mode - falling edge*/
-#define 	GPIO_MODE_IN_RT		5			/*GPIO Input mode - rising edge*/
-#define	 	GPIO_MODE_IN_RFT	6			/*GPIO Input mode - rise fall edge*/
+#define 	GPIO_MODE_IRQ_FT	4			/*GPIO Input mode - falling edge*/
+#define 	GPIO_MODE_IRQ_RT	5			/*GPIO Input mode - rising edge*/
+#define	 	GPIO_MODE_IRQ_RFT	6			/*GPIO Input mode - rise fall edge*/
 
 /******************************************************
 				@1.GPIO pin output modes
@@ -58,6 +56,7 @@ typedef struct
 	uint8_t 	PinAltFunc;		/*Configures Pin */
 }GPIO_PinConfig_t;
 
+
 typedef struct
 {
 	GPIO_RegDef_t 		*pGPIOx;		/*Base address of the GPIO that the pin belongs to*/
@@ -71,22 +70,22 @@ typedef struct
 void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi);
 
 //2.Initialize and deInitialize
-void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
-void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
+void gpio_init(GPIO_Handle_t *pGPIOHandle);
+void gpio_deinit(GPIO_RegDef_t *pGPIOx);
 
 //3.Data read\write
-uint8_t GPIO_ReadPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
-uint16_t GPIO_ReadPort(GPIO_RegDef_t *pGPIOx);
-void GPIO_WriteToPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value);
-void GPIO_WriteToPort(GPIO_RegDef_t *pGPIOx, uint16_t value);
-void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number);
+uint8_t gpio_read_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
+uint16_t gpio_read_port(GPIO_RegDef_t *pGPIOx);
+void gpio_write_to_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value);
+void gpio_write_to_port(GPIO_RegDef_t *pGPIOx, uint16_t value);
+void gpio_toggle_pin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number);
 
 //4.Interrupt handling
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnOrDi);
-void GPIO_IRQHandle(uint8_t PinNumber);
+void gpio_irq_cfg(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnOrDi);
+void gpio_irq_handler(uint8_t PinNumber);
 
 //4.GPIO control
-void configure_gpio_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
+void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
 
 #endif /* INC_STM32F407XX_GPIO_DRIVER_H_ */
 

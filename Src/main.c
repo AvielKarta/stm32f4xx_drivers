@@ -1,8 +1,6 @@
 /*
- * 001led_toggle.c
- *
- *  Created on: Jan 4, 2020
- *      Author: admin
+ * 		main.c
+ *      Author:  Aviel karta
  */
 
 #include "stm32f407xx.h"
@@ -12,7 +10,6 @@ void delay(void)
 {
 	for(uint32_t i = 0 ; i < 500000 ; i ++);
 }
-
 
 int main(void)
 {
@@ -24,11 +21,15 @@ int main(void)
 	GPIO_Handle_t blue_led;
 	GPIO_Handle_t button;
 
-	configure_gpio_pin(&green_led, GPIOD, 12, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	configure_gpio_pin(&orange_led, GPIOD, 13, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	configure_gpio_pin(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	configure_gpio_pin(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	configure_gpio_pin(&button, GPIOA, 0, GPIO_MODE_IN, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
+	GPIO_Handle_t irq_pin;
+
+	gpio_configure_pin(&green_led, GPIOD, 12, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
+	gpio_configure_pin(&orange_led, GPIOD, 13, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
+	gpio_configure_pin(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
+	gpio_configure_pin(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
+	gpio_configure_pin(&button, GPIOA, 0, GPIO_MODE_IN, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
+
+	gpio_configure_pin(&irq_pin, GPIOA, 12, GPIO_MODE_IRQ_FT, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
 
 
 	/*Enable the LED in open drain configuration (low current, low LED intensity)*/
@@ -40,19 +41,20 @@ int main(void)
 	GPIO_CLKCtrl(GPIOD,ENABLE);
 	GPIO_CLKCtrl(GPIOA,ENABLE);
 
-	GPIO_Init(&green_led);
-	GPIO_Init(&orange_led);
-	GPIO_Init(&red_led);
-	GPIO_Init(&blue_led);
-	GPIO_Init(&button);
+	gpio_init(&green_led);
+	gpio_init(&orange_led);
+	gpio_init(&red_led);
+	gpio_init(&blue_led);
+	gpio_init(&button);
+	gpio_init(&irq_pin);
 
 	
 	while(1)
 	{
-		if (GPIO_ReadPin(GPIOA, 0) == ENABLE)
+		if (gpio_read_pin(GPIOA, 0) == ENABLE)
 		{
 			delay();
-			GPIO_TogglePin(GPIOD, 12+(++cnt)%4);
+			gpio_toggle_pin(GPIOD, 12+(++cnt)%4);
 		}
 	}
 	return 0;

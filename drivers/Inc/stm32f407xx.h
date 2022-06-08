@@ -1,8 +1,6 @@
 /*
- * stm32f407xx.h
- *
- *  Created on: Jan 4, 2020
- *      Author: Aviel karta
+ * 		stm32f407xx.h
+ *      Author:  Aviel karta
  */
 
 
@@ -64,6 +62,8 @@
 #define 	GPIOI_BASE				(AHB1_BUS_BASE + 0x2000)
 #define 	RCC_BASE				(AHB1_BUS_BASE + 0x3800)
 #define 	RCC						((RCC_RegDef_t*) RCC_BASE)
+#define 	EXTI					((EXTI_RegDef_t*) EXTI_BASE)
+
 /*------------------------------------------------------
 3.1.1.2 GPIO addresses casted to the GPIO registers structure
 ------------------------------------------------------*/
@@ -243,6 +243,28 @@ typedef struct
 /*----------------------------------------------------
 4.2 AHB2 peripherals
 ------------------------------------------------------*/
+
+/*----------------------------------------------------
+4.2.1 SYSCFG registers
+------------------------------------------------------*/
+typedef struct{
+
+	__IO uint32_t MEMRMP;			/*memory remap register						Address offset: 0x00 */
+	__IO uint32_t PMC;				/*peripheral mode configuration register	Address offset: 0x04 */
+	__IO uint32_t EXTICR1;			/*external interrupt configuration 1		Address offset: 0x08 */
+	__IO uint32_t EXTICR2;			/*external interrupt configuration 2		Address offset: 0x0C */
+	__IO uint32_t EXTICR3;			/*external interrupt configuration 3		Address offset: 0x10 */
+	__IO uint32_t EXTICR4;			/*external interrupt configuration 4		Address offset: 0x14 */
+	     uint32_t RESERVED1;												  /*Address offset: 0x18 */
+	     uint32_t RESERVED2;												  /*Address offset: 0x1c */
+	__IO uint32_t CMPCR;				/*Compensation cell control register	Address offset: 0x20 */
+		uint32_t RESERVED3;												      /*Address offset: 0x24 */
+		uint32_t RESERVED4;												      /*Address offset: 0x28 */
+	__IO uint32_t CFGR;
+
+}SYSCFG_RegDef_t;
+
+
 /*----------------------------------------------------
 4.3 APB1 peripherals
 ------------------------------------------------------*/
@@ -310,8 +332,23 @@ typedef struct
 4.4.1.3 SYSCFG - CLK Enables\Disable
 ------------------------------------------------------*/
 #define SYSCFG_CLK_EN()			(RCC->APB2ENR |= (1 << 14))
-
 #define SYSCFG_CLK_DI()			(RCC->APB2ENR &= ~(1 << 14))
+
+
+typedef struct{
+
+	__IO uint32_t IMR;			/*Interrupt mask register				Address offset: 0x00 */
+	__IO uint32_t EMR;			/*Event mask register					Address offset: 0x04 */
+	__IO uint32_t RTSR;			/*Rising trigger selection register		Address offset: 0x08 */
+	__IO uint32_t FTSR;			/*Falling trigger selection register	Address offset: 0x0C */
+	__IO uint32_t SWIER;		/*Software interrupt event register		Address offset: 0x10 */
+	__IO uint32_t PR;			/*Pending register					 	Address offset: 0x14 */
+
+}EXTI_RegDef_t;
+
+
+
+
 
 #include "stm32f407xx_gpio_driver.h"
 #endif /* INC_STM32F407XX_H_ */

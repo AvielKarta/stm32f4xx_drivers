@@ -1,10 +1,9 @@
 /*
- * stm32f407xx_gpio_driver.c
- *
- *  Created on: Jan 4, 2020
- *      Author: karta
+ * 		stm32f407xx_gpio_driver.c
+ *      Author:  Aviel karta
  */
 # include "stm32f407xx.h"
+
 
 //1.Clock control
 void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi)
@@ -56,25 +55,54 @@ void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi)
 	}
 
 }
+
 //2.Initialize and deInitialize
-void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
+void gpio_init(GPIO_Handle_t *pGPIOHandle)
 {
 	uint32_t temp=0;
 
 	/* 1.Configure GPIO pin mode - each pin has 2 dedicated bits in the GPIO mode register
 	hence the value is shifted with multiplication  of 2 relative to pin #. */
+
+	//1.1.Non interrupt mode
 	if (pGPIOHandle->GPIO_PinCfng.PinMode <= GPIO_MODE_ANALOG)
 	{
-		//non interrupt mode
+
 		temp = (pGPIOHandle->GPIO_PinCfng.PinMode << (2* pGPIOHandle->GPIO_PinCfng.PinNumber));
 		pGPIOHandle->pGPIOx->MODER &= ~(0x3 << pGPIOHandle->GPIO_PinCfng.PinNumber); //Clear the 2 bits
 		pGPIOHandle->pGPIOx->MODER |= temp;// Write to the 2 bits
 		temp= 0;
 	}
+
+	//1.2.Interrupt mode
 	else
 	{
-		//Interrupt mode
+		// Enable the Interrupt mask register
+		EXTI->IMR |=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
+
+		if (pGPIOHandle->GPIO_PinCfng.PinMode == GPIO_MODE_IRQ_FT)
+		{	// Enable only the rising trigger selection register
+			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
+			EXTI->FTSR|=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
+
+		}
+		else if (pGPIOHandle->GPIO_PinCfng.PinMode == GPIO_MODE_IRQ_RT)
+		{
+			//Enable only falling trigger selection register
+			EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
+			EXTI->RTSR|=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
+		}
+		else if (pGPIOHandle->GPIO_PinCfng.PinMode == GPIO_MODE_IRQ_RFT)
+		{
+			//Enable both falling and rising trigger selection register
+			EXTI->RTSR|=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
+			EXTI->FTSR|=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
+
+		}
+		temp = 0;
+
 	}
+
 	/*2. Configure GPIO pin speed - each pin has 2 dedicated bits in the GPIO mode register
 	hence the value is shifted as multiplication  of 2 relative to pin # */
 	temp = (pGPIOHandle->GPIO_PinCfng.PinSpeed << (2* pGPIOHandle->GPIO_PinCfng.PinNumber));
@@ -109,30 +137,8 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	}
 
 
-	/*
-	if (pGPIOHandle->GPIO_PinCfng.PinNumber > 8)
-	{
-		temp = (pGPIOHandle->GPIO_PinCfng.PinAltFunc << (4 * pGPIOHandle->GPIO_PinCfng.PinNumber));
-		pGPIOHandle->pGPIOx->AFRH |= temp;
-		temp= 0;
-	}
-	else
-	{
-		temp = (pGPIOHandle->GPIO_PinCfng.PinAltFunc << (4 *pGPIOHandle->GPIO_PinCfng.PinNumber));
-		pGPIOHandle->pGPIOx->AFRL |= temp;
-		temp= 0;
-	}
-	*/
-
-
-
-
-
-
-
-
 }
-void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
+void gpio_deinit(GPIO_RegDef_t *pGPIOx)
 {
 	if (pGPIOx == GPIOA)
 	{
@@ -171,20 +177,21 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 		GPIOI_RST();
 	}
 }
+
 //3.Data read\write
-uint8_t GPIO_ReadPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
+uint8_t gpio_read_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
 	uint8_t value;
 	value = (uint8_t)((pGPIOx->IDR >>PinNumber) & 0x00000001); // shift n-th bit on the LSB and masking the rest
 	return value;
 }
-uint16_t GPIO_ReadPort(GPIO_RegDef_t *pGPIOx)
+uint16_t gpio_read_port(GPIO_RegDef_t *pGPIOx)
 {
 	uint16_t value;
 	value = (uint16_t)pGPIOx->IDR; // returns the entire register
 	return value;
 }
-void GPIO_WriteToPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value)
+void gpio_write_to_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value)
 {
 	if (value == ENABLE)
 	{
@@ -201,17 +208,17 @@ void GPIO_WriteToPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value)
 
 
 }
-void GPIO_WriteToPort(GPIO_RegDef_t *pGPIOx, uint16_t value)
+void gpio_write_to_port(GPIO_RegDef_t *pGPIOx, uint16_t value)
 {
 	pGPIOx->ODR = value;
 }
-void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number)
+void gpio_toggle_pin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number)
 {
 	pGPIOx->ODR ^= (1 << pin_number); //changing previous pin state
 }
 
-//4.LedController
-void configure_gpio_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
+//4.Configure the GPIO_Handle_t structure for a specific pin
+void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
 {
 	GpioLed->pGPIOx = gpio;
 	GpioLed->GPIO_PinCfng.PinNumber = pin_number;

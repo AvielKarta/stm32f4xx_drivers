@@ -4,11 +4,12 @@
  */
 # include "stm32f407xx.h"
 
-
-//1.Clock control
-void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi)
+/******************************************************
+				1.GPIO CLK control
+*******************************************************/
+void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t action)
 {
-	if (EnOrDi == ENABLE)
+	if (action == ENABLE)
 	{
 		if (pGPIOx == GPIOA)
 		{
@@ -56,7 +57,9 @@ void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi)
 
 }
 
-//2.Initialize and deInitialize
+/******************************************************
+				2.GPIO de/init
+*******************************************************/
 void gpio_init(GPIO_Handle_t *pGPIOHandle)
 {
 	uint32_t temp=0;
@@ -84,7 +87,6 @@ void gpio_init(GPIO_Handle_t *pGPIOHandle)
 		{	// Enable only the rising trigger selection register
 			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
 			EXTI->FTSR|=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
-
 		}
 		else if (pGPIOHandle->GPIO_PinCfng.PinMode == GPIO_MODE_IRQ_RT)
 		{
@@ -97,9 +99,34 @@ void gpio_init(GPIO_Handle_t *pGPIOHandle)
 			//Enable both falling and rising trigger selection register
 			EXTI->RTSR|=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
 			EXTI->FTSR|=   (1 << pGPIOHandle->GPIO_PinCfng.PinNumber);
-
 		}
-		temp = 0;
+		//Select the SYSCFG register
+
+		uint32_t value = 0;
+		if (pGPIOHandle->pGPIOx == GPIOA)
+			value = 0;
+		if (pGPIOHandle->pGPIOx == GPIOB)
+			value = 1;
+		if (pGPIOHandle->pGPIOx == GPIOC)
+			value = 2;
+		if (pGPIOHandle->pGPIOx == GPIOD)
+			value = 3;
+		if (pGPIOHandle->pGPIOx == GPIOE)
+			value = 4;
+		if (pGPIOHandle->pGPIOx == GPIOF)
+			value = 4;
+		if (pGPIOHandle->pGPIOx == GPIOG)
+			value = 6;
+		if (pGPIOHandle->pGPIOx == GPIOH)
+			value = 7;
+		if (pGPIOHandle->pGPIOx == GPIOI)
+			value = 8;
+
+		SYSCFG_CLK_EN();
+		uint32_t exticr_reg = pGPIOHandle->GPIO_PinCfng.PinNumber/4;
+		uint32_t exticr_position = pGPIOHandle->GPIO_PinCfng.PinNumber%4;
+		SYSCFG->EXTICR[exticr_reg ] &= ~(value<<4*exticr_position);
+		SYSCFG->EXTICR[exticr_reg ] |= value<<4*exticr_position;
 
 	}
 
@@ -177,8 +204,19 @@ void gpio_deinit(GPIO_RegDef_t *pGPIOx)
 		GPIOI_RST();
 	}
 }
+void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
+{
+	GpioLed->pGPIOx = gpio;
+	GpioLed->GPIO_PinCfng.PinNumber = pin_number;
+	GpioLed->GPIO_PinCfng.PinMode = output_mode;
+	GpioLed->GPIO_PinCfng.PinSpeed = pin_speed;
+	GpioLed->GPIO_PinCfng.PinOType = pin_out_mode;
+	GpioLed->GPIO_PinCfng.PinPuPdCtrl = internal_resistor_state;
+}
 
-//3.Data read\write
+/******************************************************
+				3.GPIO read\write functions
+*******************************************************/
 uint8_t gpio_read_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
 	uint8_t value;
@@ -217,15 +255,41 @@ void gpio_toggle_pin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number)
 	pGPIOx->ODR ^= (1 << pin_number); //changing previous pin state
 }
 
-//4.Configure the GPIO_Handle_t structure for a specific pin
-void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
+/******************************************************
+				4.GPIO Interrupt request functions
+*******************************************************/
+void gpio_irq_set(uint8_t IRQNumber)
+
 {
-	GpioLed->pGPIOx = gpio;
-	GpioLed->GPIO_PinCfng.PinNumber = pin_number;
-	GpioLed->GPIO_PinCfng.PinMode = output_mode;
-	GpioLed->GPIO_PinCfng.PinSpeed = pin_speed;
-	GpioLed->GPIO_PinCfng.PinOType = pin_out_mode;
-	GpioLed->GPIO_PinCfng.PinPuPdCtrl = internal_resistor_state;
+	if (IRQNumber < 32)
+		{*NVIC_ISER0 |= (1<<IRQNumber);}
+	else if ((IRQNumber > 32)&&(IRQNumber < 64))
+		{*NVIC_ISER1 |= (1<<IRQNumber%32); }
+	else if ((IRQNumber > 64)&&(IRQNumber < 96))
+		{*NVIC_ISER2 |= (1<<IRQNumber%32); }
 }
+void gpio_irq_clear(uint8_t IRQNumber)
 
+{
+	if (IRQNumber < 32)
+		{*NVIC_ICER0 |= (1<<IRQNumber); }
+	else if ((IRQNumber > 32)&&(IRQNumber < 64))
+		{*NVIC_ICER1 |= (1<<IRQNumber%32); }
+	else if ((IRQNumber > 64)&&(IRQNumber < 96))
+		{*NVIC_ICER2 |= (1<<IRQNumber%32); }
+}
+void gpio_irq_priority(uint8_t IRQPriority)
+{
+	uint8_t iprx = IRQPriority/4;
+	uint8_t	iprx_section = IRQPriority%4;
+	uint8_t shift_amount = (8 * iprx_section) + (8 - PRIORITY_NOT_IMPLEMENTED_BITS);
+	*(NVIC_IPR_BASE + iprx) |= (IRQPriority << iprx_section) << (shift_amount);
 
+}
+void gpio_irq_handler(uint8_t PinNumber)
+{
+	if(EXTI->PR & (1 << PinNumber))
+	{
+		EXTI->PR |= (1 << PinNumber);
+	}
+}

@@ -63,29 +63,39 @@ typedef struct
 	GPIO_PinConfig_t 	GPIO_PinCfng;	/**/
 }GPIO_Handle_t;
 
+
+
 /*******************************************************************************************
 				API's supported by this driver
 ********************************************************************************************/
-//1.Clock control
+/******************************************************
+				1.GPIO CLK control
+*******************************************************/
 void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi);
 
-//2.Initialize and deInitialize
+/******************************************************
+				2.GPIO de/init
+*******************************************************/
+void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
 void gpio_init(GPIO_Handle_t *pGPIOHandle);
 void gpio_deinit(GPIO_RegDef_t *pGPIOx);
 
-//3.Data read\write
+/******************************************************
+				3.GPIO read\write functions
+*******************************************************/
 uint8_t gpio_read_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 uint16_t gpio_read_port(GPIO_RegDef_t *pGPIOx);
 void gpio_write_to_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value);
 void gpio_write_to_port(GPIO_RegDef_t *pGPIOx, uint16_t value);
 void gpio_toggle_pin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number);
 
-//4.Interrupt handling
+/******************************************************
+				4.GPIO Interrupt request functions
+*******************************************************/
 void gpio_irq_cfg(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnOrDi);
 void gpio_irq_handler(uint8_t PinNumber);
-
-//4.GPIO control
-void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
+void gpio_irq_clear(uint8_t IRQNumber);
+void gpio_irq_set(uint8_t IRQNumber);
 
 #endif /* INC_STM32F407XX_GPIO_DRIVER_H_ */
 

@@ -11,16 +11,22 @@
 
 #include <stdint.h>
 
+
+/*=================================================================================================================================================================================
+																					STM side
+=================================================================================================================================================================================*/
+
+
 /******************************************************
 				0.Generic Macros
 *******************************************************/
-#define 	__IO 					volatile
-#define EN								1
-#define DIS								0
-#define ENABLE							1
-#define DISABLE							0
-#define SET								1
-#define RST								0
+#define __vo 									volatile
+
+#define ENABLE									1
+#define DISABLE									0
+#define SET										1
+#define RST										0
+#define PRIORITY_NOT_IMPLEMENTED_BITS			4
 
 /******************************************************
 				1.Memory base addresses
@@ -63,7 +69,7 @@
 #define 	RCC_BASE				(AHB1_BUS_BASE + 0x3800)
 #define 	RCC						((RCC_RegDef_t*) RCC_BASE)
 #define 	EXTI					((EXTI_RegDef_t*) EXTI_BASE)
-
+#define 	SYSCFG					((SYSCFG_RegDef_t*) SYSCFG_BASE)
 /*------------------------------------------------------
 3.1.1.2 GPIO addresses casted to the GPIO registers structure
 ------------------------------------------------------*/
@@ -142,15 +148,15 @@
 ------------------------------------------------------*/
 typedef struct
 {
-	__IO uint32_t MODER;		/*Port MODE register					Address offset: 0x00 */
-	__IO uint32_t OTYPER;		/*Output type register					Address offset: 0x04 */
-	__IO uint32_t OSPEEDR;		/*Output speed register					Address offset: 0x08 */
-	__IO uint32_t PUPDR;		/*Output pull up\down register			Address offset: 0x0C */
-	__IO uint32_t IDR;			/*Input data register					Address offset: 0x10 */
-	__IO uint32_t ODR;			/*Output data type register				Address offset: 0x14 */
-	__IO uint32_t BSRR;			/*Bit set/reset  register				Address offset: 0x18 */
-	__IO uint32_t LCKR;			/*Lock configuration register			Address offset: 0x1C */
-	__IO uint32_t AFR[2];		/*Alternate functionality Low register	Address offset: 0x20 */
+	__vo uint32_t MODER;		/*Port MODE register					Address offset: 0x00 */
+	__vo uint32_t OTYPER;		/*Output type register					Address offset: 0x04 */
+	__vo uint32_t OSPEEDR;		/*Output speed register					Address offset: 0x08 */
+	__vo uint32_t PUPDR;		/*Output pull up\down register			Address offset: 0x0C */
+	__vo uint32_t IDR;			/*Input data register					Address offset: 0x10 */
+	__vo uint32_t ODR;			/*Output data type register				Address offset: 0x14 */
+	__vo uint32_t BSRR;			/*Bit set/reset  register				Address offset: 0x18 */
+	__vo uint32_t LCKR;			/*Lock configuration register			Address offset: 0x1C */
+	__vo uint32_t AFR[2];		/*Alternate functionality Low register	Address offset: 0x20 */
 								/*Alternate functionality High register Address offset: 0x24 */
 	//uint_32_t AFR[2];			/*Alternate functionality register		Address offset: 0x24 */
 
@@ -203,39 +209,39 @@ typedef struct
 
 typedef struct
 {
-	__IO uint32_t CR;			/*								Address offset: 0x00 */
-	__IO uint32_t PLLCFG;		/*								Address offset: 0x04 */
-	__IO uint32_t CFGR;			/*								Address offset: 0x08 */
-	__IO uint32_t CIR;			/*								Address offset: 0x0C */
-	__IO uint32_t AHB1RSTR;		/*								Address offset: 0x10 */
-	__IO uint32_t AHB2RSTR;		/*								Address offset: 0x14 */
-	__IO uint32_t AHB3RSTR;		/*								Address offset: 0x18 */
-	__IO uint32_t RESERVED_0;	/*								Address offset: 0x1C */
-	__IO uint32_t APB1RSTR;		/*								Address offset: 0x20 */
-	__IO uint32_t APB2RSTR;		/*								Address offset: 0x24 */
-	__IO uint32_t RESERVED_1;	/*								Address offset: 0x28 */
-	__IO uint32_t RESERVED_2;	/*								Address offset: 0x2C */
-	__IO uint32_t AHB1ENR;		/*								Address offset: 0x30 */
-	__IO uint32_t AHB2ENR;		/*								Address offset: 0x34 */
-	__IO uint32_t AHB3ENR;		/*								Address offset: 0x38 */
-	__IO uint32_t RESERVED_3;	/*								Address offset: 0x3C */
-	__IO uint32_t APB1ENR;		/*								Address offset: 0x40 */
-	__IO uint32_t APB2ENR;		/*								Address offset: 0x44 */
-	__IO uint32_t RESERVED_4;	/*								Address offset: 0x48 */
-	__IO uint32_t RESERVED_5;	/*								Address offset: 0x4C */
-	__IO uint32_t AHB1LPENR;	/*								Address offset: 0x50 */
-	__IO uint32_t AHB2LPENR;	/*								Address offset: 0x54 */
-	__IO uint32_t AHB3LPENR;	/*								Address offset: 0x58 */
-	__IO uint32_t RESERVED_6;	/*								Address offset: 0x5C */
-	__IO uint32_t APB1LPENR;	/*								Address offset: 0x60 */
-	__IO uint32_t APB2LPENR;	/*								Address offset: 0X64 */
-	__IO uint32_t RESERVED_7;	/*								Address offset: 0x68 */
-	__IO uint32_t RESERVED_8;	/*								Address offset: 0x6C */
-	__IO uint32_t BDCR;			/*								Address offset: 0x70 */
-	__IO uint32_t CSR;			/*								Address offset: 0x74 */
-	__IO uint32_t RESERVED_9[2];/*							Address offset: 0x78+0x7c */
-	__IO uint32_t SSCGR;		/*								Address offset: 0x80 */
-	__IO uint32_t PLLI2SCFGR;	/*								Address offset: 0x84 */
+	__vo uint32_t CR;			/*								Address offset: 0x00 */
+	__vo uint32_t PLLCFG;		/*								Address offset: 0x04 */
+	__vo uint32_t CFGR;			/*								Address offset: 0x08 */
+	__vo uint32_t CIR;			/*								Address offset: 0x0C */
+	__vo uint32_t AHB1RSTR;		/*								Address offset: 0x10 */
+	__vo uint32_t AHB2RSTR;		/*								Address offset: 0x14 */
+	__vo uint32_t AHB3RSTR;		/*								Address offset: 0x18 */
+	__vo uint32_t RESERVED_0;	/*								Address offset: 0x1C */
+	__vo uint32_t APB1RSTR;		/*								Address offset: 0x20 */
+	__vo uint32_t APB2RSTR;		/*								Address offset: 0x24 */
+	__vo uint32_t RESERVED_1;	/*								Address offset: 0x28 */
+	__vo uint32_t RESERVED_2;	/*								Address offset: 0x2C */
+	__vo uint32_t AHB1ENR;		/*								Address offset: 0x30 */
+	__vo uint32_t AHB2ENR;		/*								Address offset: 0x34 */
+	__vo uint32_t AHB3ENR;		/*								Address offset: 0x38 */
+	__vo uint32_t RESERVED_3;	/*								Address offset: 0x3C */
+	__vo uint32_t APB1ENR;		/*								Address offset: 0x40 */
+	__vo uint32_t APB2ENR;		/*								Address offset: 0x44 */
+	__vo uint32_t RESERVED_4;	/*								Address offset: 0x48 */
+	__vo uint32_t RESERVED_5;	/*								Address offset: 0x4C */
+	__vo uint32_t AHB1LPENR;	/*								Address offset: 0x50 */
+	__vo uint32_t AHB2LPENR;	/*								Address offset: 0x54 */
+	__vo uint32_t AHB3LPENR;	/*								Address offset: 0x58 */
+	__vo uint32_t RESERVED_6;	/*								Address offset: 0x5C */
+	__vo uint32_t APB1LPENR;	/*								Address offset: 0x60 */
+	__vo uint32_t APB2LPENR;	/*								Address offset: 0X64 */
+	__vo uint32_t RESERVED_7;	/*								Address offset: 0x68 */
+	__vo uint32_t RESERVED_8;	/*								Address offset: 0x6C */
+	__vo uint32_t BDCR;			/*								Address offset: 0x70 */
+	__vo uint32_t CSR;			/*								Address offset: 0x74 */
+	__vo uint32_t RESERVED_9[2];/*							Address offset: 0x78+0x7c */
+	__vo uint32_t SSCGR;		/*								Address offset: 0x80 */
+	__vo uint32_t PLLI2SCFGR;	/*								Address offset: 0x84 */
 
 
 }RCC_RegDef_t;
@@ -249,21 +255,32 @@ typedef struct
 ------------------------------------------------------*/
 typedef struct{
 
-	__IO uint32_t MEMRMP;			/*memory remap register						Address offset: 0x00 */
-	__IO uint32_t PMC;				/*peripheral mode configuration register	Address offset: 0x04 */
-	__IO uint32_t EXTICR1;			/*external interrupt configuration 1		Address offset: 0x08 */
-	__IO uint32_t EXTICR2;			/*external interrupt configuration 2		Address offset: 0x0C */
-	__IO uint32_t EXTICR3;			/*external interrupt configuration 3		Address offset: 0x10 */
-	__IO uint32_t EXTICR4;			/*external interrupt configuration 4		Address offset: 0x14 */
+	__vo uint32_t MEMRMP;			/*memory remap register						Address offset: 0x00 */
+	__vo uint32_t PMC;				/*peripheral mode configuration register	Address offset: 0x04 */
+	__vo uint32_t EXTICR[4];		/*external interrupt configuration 1-4		Address offset: 0x08-0x14 */
 	     uint32_t RESERVED1;												  /*Address offset: 0x18 */
 	     uint32_t RESERVED2;												  /*Address offset: 0x1c */
-	__IO uint32_t CMPCR;				/*Compensation cell control register	Address offset: 0x20 */
+	__vo uint32_t CMPCR;			/*Compensation cell control register	Address offset: 0x20 */
 		uint32_t RESERVED3;												      /*Address offset: 0x24 */
 		uint32_t RESERVED4;												      /*Address offset: 0x28 */
-	__IO uint32_t CFGR;
+	__vo uint32_t CFGR;
 
 }SYSCFG_RegDef_t;
 
+/*----------------------------------------------------
+4.2.2 EXTI registers
+------------------------------------------------------*/
+
+typedef struct{
+
+	__vo uint32_t IMR;			/*Interrupt mask register				Address offset: 0x00 */
+	__vo uint32_t EMR;			/*Event mask register					Address offset: 0x04 */
+	__vo uint32_t RTSR;			/*Rising trigger selection register		Address offset: 0x08 */
+	__vo uint32_t FTSR;			/*Falling trigger selection register	Address offset: 0x0C */
+	__vo uint32_t SWIER;		/*Software interrupt event register		Address offset: 0x10 */
+	__vo uint32_t PR;			/*Pending register					 	Address offset: 0x14 */
+
+}EXTI_RegDef_t;
 
 /*----------------------------------------------------
 4.3 APB1 peripherals
@@ -334,17 +351,46 @@ typedef struct{
 #define SYSCFG_CLK_EN()			(RCC->APB2ENR |= (1 << 14))
 #define SYSCFG_CLK_DI()			(RCC->APB2ENR &= ~(1 << 14))
 
+/*******************************************************************************************
+				5. IRQ (RM0090 Rev 17 p376/1747)
+********************************************************************************************/
 
-typedef struct{
+#define EXTI0 			6 					 /*Address 0x0000 0058*/
+#define EXTI1 			7 					 /*Address 0x0000 005C*/
+#define EXTI2 			8 					 /*Address 0x0000 0060*/
+#define EXTI3 			9 					 /*Address 0x0000 0064*/
+#define EXTI4 			10 					 /*Address 0x0000 0068*/
+#define EXTI9_5 		23 					 /*Address 0x0000 009c*/
+#define EXTI10_15 		40 					 /*Address 0x0000 00e0*/
 
-	__IO uint32_t IMR;			/*Interrupt mask register				Address offset: 0x00 */
-	__IO uint32_t EMR;			/*Event mask register					Address offset: 0x04 */
-	__IO uint32_t RTSR;			/*Rising trigger selection register		Address offset: 0x08 */
-	__IO uint32_t FTSR;			/*Falling trigger selection register	Address offset: 0x0C */
-	__IO uint32_t SWIER;		/*Software interrupt event register		Address offset: 0x10 */
-	__IO uint32_t PR;			/*Pending register					 	Address offset: 0x14 */
 
-}EXTI_RegDef_t;
+
+/*=================================================================================================================================================================================
+																					ARM CORTEX M4(CPU) side
+=================================================================================================================================================================================*/
+
+/******************************************************
+				IRQ enable\clear registers
+*******************************************************/
+
+
+#define 	NVIC_ISER0 		((__vo uint32_t*) 0xE000E100)
+#define 	NVIC_ISER1 		((__vo uint32_t*)0xE000E104)
+#define 	NVIC_ISER2 		((__vo uint32_t*)0xE000E108)
+
+
+#define 	NVIC_ICER0 		((__vo uint32_t*)0xE000E180)
+#define 	NVIC_ICER1 		((__vo uint32_t*)0xE000E184)
+#define 	NVIC_ICER2 		((__vo uint32_t*)0xE000E188)
+
+/******************************************************
+				IRQ priority registers
+*******************************************************/
+
+#define 	NVIC_IPR_BASE		((__vo uint32_t*)0xE000E400)
+
+
+
 
 
 

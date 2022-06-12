@@ -35,7 +35,7 @@ int main(void)
 	/*Enable the LED in open drain configuration (low current, low LED intensity)*/
 //	configure_gpio_pin(&green_led, GPIOD, 12, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
 //	configure_gpio_pin(&orange_led, GPIOD, 13, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
-//  configure_gpio_pin(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
+//	configure_gpio_pin(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
 //	configure_gpio_pin(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_OD, GPIO_PU);
 
 	GPIO_CLKCtrl(GPIOD,ENABLE);
@@ -48,6 +48,10 @@ int main(void)
 	gpio_init(&button);
 	gpio_init(&irq_pin);
 
+	void EXTI0_IRQHandler(void)
+	{
+		gpio_irq_handler(0);
+	}
 	
 	while(1)
 	{

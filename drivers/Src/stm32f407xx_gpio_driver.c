@@ -105,21 +105,21 @@ void gpio_init(GPIO_Handle_t *pGPIOHandle)
 		uint32_t value = 0;
 		if (pGPIOHandle->pGPIOx == GPIOA)
 			value = 0;
-		if (pGPIOHandle->pGPIOx == GPIOB)
+		else if (pGPIOHandle->pGPIOx == GPIOB)
 			value = 1;
-		if (pGPIOHandle->pGPIOx == GPIOC)
+		else if (pGPIOHandle->pGPIOx == GPIOC)
 			value = 2;
-		if (pGPIOHandle->pGPIOx == GPIOD)
+		else if (pGPIOHandle->pGPIOx == GPIOD)
 			value = 3;
-		if (pGPIOHandle->pGPIOx == GPIOE)
+		else if (pGPIOHandle->pGPIOx == GPIOE)
 			value = 4;
-		if (pGPIOHandle->pGPIOx == GPIOF)
+		else if (pGPIOHandle->pGPIOx == GPIOF)
 			value = 4;
-		if (pGPIOHandle->pGPIOx == GPIOG)
+		else if (pGPIOHandle->pGPIOx == GPIOG)
 			value = 6;
-		if (pGPIOHandle->pGPIOx == GPIOH)
+		else if (pGPIOHandle->pGPIOx == GPIOH)
 			value = 7;
-		if (pGPIOHandle->pGPIOx == GPIOI)
+		else if (pGPIOHandle->pGPIOx == GPIOI)
 			value = 8;
 
 		SYSCFG_CLK_EN();
@@ -259,7 +259,6 @@ void gpio_toggle_pin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number)
 				4.GPIO Interrupt request functions
 *******************************************************/
 void gpio_irq_set(uint8_t IRQNumber)
-
 {
 	if (IRQNumber < 32)
 		{*NVIC_ISER0 |= (1<<IRQNumber);}
@@ -278,10 +277,10 @@ void gpio_irq_clear(uint8_t IRQNumber)
 	else if ((IRQNumber > 64)&&(IRQNumber < 96))
 		{*NVIC_ICER2 |= (1<<IRQNumber%32); }
 }
-void gpio_irq_priority(uint8_t IRQPriority)
+void gpio_irq_priority(uint8_t IRQNumber, uint8_t IRQPriority)
 {
-	uint8_t iprx = IRQPriority/4;
-	uint8_t	iprx_section = IRQPriority%4;
+	uint8_t iprx = IRQNumber/4;
+	uint8_t	iprx_section = IRQNumber%4;
 	uint8_t shift_amount = (8 * iprx_section) + (8 - PRIORITY_NOT_IMPLEMENTED_BITS);
 	*(NVIC_IPR_BASE + iprx) |= (IRQPriority << iprx_section) << (shift_amount);
 

@@ -133,6 +133,7 @@
 
 #define 	EXTI_BASE				(APB2_BUS_BASE + 0x3C00)
 #define 	SPI1_BASE				(APB2_BUS_BASE + 0x3000)
+#define 	SPI4_BASE				(APB2_BUS_BASE + 0x3400)
 #define 	SYSCFG_BASE				(APB2_BUS_BASE + 0x3800)
 #define 	USART1_BASE				(APB2_BUS_BASE + 0x1000)
 #define 	USART6_BASE				(APB2_BUS_BASE + 0x1400)
@@ -146,6 +147,7 @@
 /*----------------------------------------------------
 4.1.1.1 GPIO - registers
 ------------------------------------------------------*/
+
 typedef struct
 {
 	__vo uint32_t MODER;		/*Port MODE register					Address offset: 0x00 */
@@ -285,8 +287,36 @@ typedef struct{
 /*----------------------------------------------------
 4.3 APB1 peripherals
 ------------------------------------------------------*/
+
+
 /*----------------------------------------------------
-4.3.1.1 SPI - CLK Enables\Disable
+4.3.1.1 SPI - Registers structures
+------------------------------------------------------*/
+
+
+typedef struct{
+
+	__vo uint32_t SPI_CR1;			/*SPI control register 1				Address offset: 0x00 */
+	__vo uint32_t SPI_CR2;			/*SPI control register 2				Address offset: 0x04 */
+	__vo uint32_t SPI_SR;			/*SPI status register 					Address offset: 0x08 */
+	__vo uint32_t SPI_DR;			/*SPI data register						Address offset: 0x0C */
+	__vo uint32_t SPI_CRCPR;		/*SPI CRC polynomial register			Address offset: 0x10 */
+	__vo uint32_t SPI_RXCRCR;		/*SPI RX CRC register Pending register	Address offset: 0x14 */
+	__vo uint32_t SPI_TXCRCR;		/*SPI RX CRC register Pending register	Address offset: 0x18 */
+	__vo uint32_t SPI_I2SCFGR;		/*SPI_I2S configuration register		Address offset: 0x1C */
+	__vo uint32_t SPI_I2SPR;		/*SPI_I2S pending register				Address offset: 0x20 */
+}SPI_RegDef_t;
+
+
+
+
+#define 	SPI1					((SPI_RegDef_t*) SPI1_BASE)
+#define 	SPI2					((SPI_RegDef_t*) SPI2_BASE)
+#define 	SPI3					((SPI_RegDef_t*) SPI3_BASE)
+#define 	SPI4					((SPI_RegDef_t*) SPI4_BASE)
+
+/*----------------------------------------------------
+4.3.2.1 SPI - CLK Enables\Disable
 ------------------------------------------------------*/
 
 #define SPI2_CLK_EN()			(RCC->APB1ENR |= (1 << 14))
@@ -296,7 +326,7 @@ typedef struct{
 #define SPI3_CLK_DI()			(RCC->APB1ENR &= ~(1 << 15))
 
 /*----------------------------------------------------
-4.3.1.2 U\SART - CLK Enables\Disable
+4.3.2.2 U\SART - CLK Enables\Disable
 ------------------------------------------------------*/
 
 #define USART2_CLK_EN()			(RCC->APB1ENR |= (1 << 17))
@@ -310,7 +340,7 @@ typedef struct{
 #define UART5_CLK_DI()			(RCC->APB1ENR &= ~(1 << 20))
 
 /*----------------------------------------------------
-4.3.1.3 I2C - CLK Enables\Disable
+4.3.2.3 I2C - CLK Enables\Disable
 ------------------------------------------------------*/
 
 #define I2C1_CLK_EN()			(RCC->APB1ENR |= (1 << 21))
@@ -320,7 +350,6 @@ typedef struct{
 #define I2C1_CLK_DI()			(RCC->APB1ENR &= ~(1 << 21))
 #define I2C2_CLK_DI()			(RCC->APB1ENR &= ~(1 << 22))
 #define I2C3_CLK_DI()			(RCC->APB1ENR &= ~(1 << 23))
-
 
 /*----------------------------------------------------
 4.4 APB2 peripherals
@@ -351,6 +380,15 @@ typedef struct{
 #define SYSCFG_CLK_EN()			(RCC->APB2ENR |= (1 << 14))
 #define SYSCFG_CLK_DI()			(RCC->APB2ENR &= ~(1 << 14))
 
+
+
+
+
+
+
+
+
+
 /*******************************************************************************************
 				5. IRQ (RM0090 Rev 17 p376/1747)
 ********************************************************************************************/
@@ -362,6 +400,9 @@ typedef struct{
 #define EXTI4 			10 					 /*Address 0x0000 0068*/
 #define EXTI9_5 		23 					 /*Address 0x0000 009c*/
 #define EXTI10_15 		40 					 /*Address 0x0000 00e0*/
+
+
+
 
 
 
@@ -397,6 +438,9 @@ typedef struct{
 
 
 #include "stm32f407xx_gpio_driver.h"
+#include "stm32f407xx_spi_driver.h"
+
+
 #endif /* INC_STM32F407XX_H_ */
 
 

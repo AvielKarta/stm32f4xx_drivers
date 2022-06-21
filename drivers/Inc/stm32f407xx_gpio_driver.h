@@ -78,8 +78,6 @@ typedef struct
 	GPIO_PinConfig_t 	GPIO_PinCfng;	/**/
 }GPIO_Handle_t;
 
-
-
 /*******************************************************************************************
 				3.API supported by this driver
 ********************************************************************************************/
@@ -87,31 +85,115 @@ typedef struct
 /******************************************************
 				3.1.GPIO CLK control
 *******************************************************/
+
+/* Enables the bus clock of GPIOx on AHB1.
+ * Arguments:
+ * ==============
+ * 		 	*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
+ *	 		enable		:	enable or disable the GPIOx CLK.*/
 void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi);
 
 /******************************************************
-				3.2.GPIO de/init
+				3.2.GPIO initializations
 *******************************************************/
-void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
+
+/* Configures a GPIO pin parameters based on user input			.
+ * Arguments:
+ * ==============
+ * 			*gpio_x_pin				 : pointer to the GPIO_Handle_t structure of the selected pin
+ * 			gpio					 : which gpio the pin belongs to
+ * 			pin_number				 : pin number
+ * 			output_mode			 	 : output_mode
+ * 			pin_speed				 : output_mode
+ * 			pin_out_mode			 : pin_out_mode
+ * 			internal_resistor_state  : internal_resistor_state
+ */
+void gpio_configure_pin(GPIO_Handle_t *gpio_x_pin, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
+/* Initializes all relevant registers (MODE, SPEED, OTYPE etc.. in GPIO_RegDef_t) for the given configured pin
+ * based on the pGPIOHandle->GPIO_PinCfn parameters given by user
+ * Arguments:
+ * ==============
+ * 			 *pGPIOHandle 	:	pointer to structure contains all relevant data regard to GPIOx peripheral.
+ */
 void gpio_init(GPIO_Handle_t *pGPIOHandle);
+/* Resets all pins in the selected GPIO back to default				.
+ * Arguments:
+ * ==============
+ *  		*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
+ */
 void gpio_deinit(GPIO_RegDef_t *pGPIOx);
 
 /******************************************************
 				3.3.GPIO read\write functions
 *******************************************************/
+
+/* Reads data from GPIO single pin
+ * Arguments:
+ * ==============
+ *  		*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
+ *  		PinNumber	:	pin number to read the data from.
+ */
 uint8_t gpio_read_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
+/* Reads data from GPIO entire port
+ * Arguments:
+ * ==============
+ *  		*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
+ *
+ */
 uint16_t gpio_read_port(GPIO_RegDef_t *pGPIOx);
+/* Writes data to GPIO single pin
+ * Arguments:
+ * ==============
+ *  		*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
+ *  		PinNumber	:	pin number to read the data from.
+ *  		value		:	value to be written
+ */
 void gpio_write_to_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value);
+/* Reads data from GPIO single pin
+ * Arguments:
+ * ==============
+ *  		*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
+ *  		PinNumber	:	pin number to read the data from.
+ *  		value		:	value to be written to the entire port.
+ */
 void gpio_write_to_port(GPIO_RegDef_t *pGPIOx, uint16_t value);
+/* Toggles single pin value
+ * Arguments:
+ * ==============
+ *  		*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
+ *  		PinNumber	:	toggled pin number.
+ */
 void gpio_toggle_pin(GPIO_RegDef_t *pGPIOx, uint8_t pin_number);
 
 /******************************************************
 				3.4.GPIO Interrupt request functions
 *******************************************************/
 
+/* Sets the IRO number in the appropriate NVIC_ISERx register
+ * Arguments:
+ * ==============
+ *  		IRQNumber 	:	interrupt number as listed in NVIC table (table 61 RM0090 Rev 17, P.372/1747)
+ */
 void gpio_irq_set(uint8_t IRQNumber);
+/* Clears the IRO number in the appropriate NVIC_ICERx register
+ * Arguments:
+ * ==============
+ *  		IRQNumber 	:	interrupt number as listed in NVIC table (table 61 RM0090 Rev 17, P.372/1747)
+ */
 void gpio_irq_clear(uint8_t IRQNumber);
+/* Sets the IRO priority in the appropriate NVIC_ISERx register
+ * Arguments:
+ * ==============
+ *  		IRQNumber 	:	interrupt number as listed in NVIC table (table 61 RM0090 Rev 17, P.372/1747)
+ *  		IRQPriority :   interrupt priority
+ */
 void gpio_irq_priority(uint8_t IRQNumber, uint8_t IRQPriority);
+/* Handles the interrupt, can perform additional tasks but currently clears the correspond bit in the pending register
+ * Arguments:
+ * ==============
+ *  		PinNumber	:	pin number to be cleared
+ *
+ */
 void gpio_irq_handler(uint8_t PinNumber);
 
 #endif /* INC_STM32F407XX_GPIO_DRIVER_H_ */

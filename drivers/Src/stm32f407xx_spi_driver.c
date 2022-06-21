@@ -7,9 +7,15 @@
 
 #include "stm32f407xx.h"
 
-void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t EnOrDi)
+
+/******************************************************
+				1.GPIO CLK control
+*******************************************************/
+
+void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t enable)
 {
-	if (EnOrDi == ENABLE)
+
+	if (enable)
 	{
 		if (spi_handle->p_spi_x == SPI1)
 		{
@@ -52,8 +58,11 @@ void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t EnOrDi)
 
 }
 
-void spi_init(SPI_Handle_t* spi_handle)
+/******************************************************
+				2.SPI
+*******************************************************/
 
+void spi_init(SPI_Handle_t* spi_handle)
 {
 	uint32_t temp = 0;
 
@@ -83,6 +92,9 @@ void spi_init(SPI_Handle_t* spi_handle)
 	spi_handle->p_spi_x->SPI_CR1 = temp;
 }
 
+/******************************************************
+				3.3.SPI send/receive functions
+*******************************************************/
 
 void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len)
 {
@@ -101,17 +113,16 @@ void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len)
 			else
 			/*If Frame format is 16 bit*/
 			{
-				/*
-//				p_spi_x->SPI_DR |= *Txbuffer;
-//				Txbuffer++;
-//				uint16_t temp = *Txbuffer;
-//				p_spi_x->SPI_DR |= (temp<<8);
-//				Txbuffer++;
-				*/
-
 				p_spi_x->SPI_DR =  *((uint16_t*)pTxbuffer);
 				len = len-2;
 				(uint16_t*)pTxbuffer++;
+				/*
+				p_spi_x->SPI_DR |= *pTxbuffer;
+				pTxbuffer++;
+				uint16_t temp = *pTxbuffer;
+				p_spi_x->SPI_DR |= (temp<<8);
+				pTxbuffer++;
+				*/
 			}
 		}
 	}

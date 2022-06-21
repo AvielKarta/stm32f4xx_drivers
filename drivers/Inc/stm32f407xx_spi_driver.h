@@ -152,7 +152,7 @@
 typedef struct
 {
 	uint8_t 	CPHA;			/*Clock phase*/
-	uint8_t 	CPOL;			/*Clock polarity*/
+	uint8_t 	CPOL;			/*Clock  polarity*/
 	uint8_t 	MSTR;			/*Master selection*/
 	uint8_t 	BR;				/*Baud rate control*/
 	uint8_t 	DFF;			/*Data Frame format*/
@@ -175,24 +175,50 @@ typedef struct
 				3.API supported by this driver
 ********************************************************************************************/
 
+
 /******************************************************
 				3.1.SPI CLK control
 *******************************************************/
+
+/* Enables the bus clock of SPIx based on its location (which bus).
+ * Arguments:
+ * ==============
+ *  		spi_handle:	Structure contains all relevant data regard to SPI peripheral instance.
+*/
 void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t EnOrDi);
 
 /******************************************************
-				3.1.SPI de/init
+				3.1.SPI initializations
 *******************************************************/
+
+/* Initializes all relevant bits in SPI registers (mainly in control register 1 SPI_CR1) based on user initialization in main
+ * Arguments:
+ * ==============
+ *  		spi_handle:	pointer to structure contains all relevant data regard to SPI peripheral instance.
+ */
 void spi_init(SPI_Handle_t* spi_handle);
-void spi_irq_set(uint8_t IRQNumber);
-void spi_irq_clear(uint8_t IRQNumber);
-void spi_irq_priority(uint8_t IRQNumber, uint8_t IRQPriority);
-void spi_irq_handler(uint8_t PinNumber);
 
 /******************************************************
 				3.3.SPI send/receive functions
 *******************************************************/
+
+/* Sends data frames (8 or 16 bit) to SPI_DR (data register), each frame is sent to SPI_DR.
+ * Next frame will be sent once TX buffer is empty (indication via SPI_SR (status register) TXE bit) function terminates once all frames sent(len).
+ * Arguments:
+ * ==============
+ * 				p_spi_x   :	SPI registers structure
+ *  			*pTxbuffer:	pointer to data frames
+ *  			len 	  :	number of data frames
+ */
 void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len);
-void spi_receive_data(SPI_Handle_t* spi_handle);
+
+
+
+
+//void spi_irq_set(uint8_t IRQNumber);
+//void spi_irq_clear(uint8_t IRQNumber);
+//void spi_irq_priority(uint8_t IRQNumber, uint8_t IRQPriority);
+//void spi_irq_handler(uint8_t PinNumber);
+//void spi_receive_data(SPI_Handle_t* spi_handle);
 
 #endif /* INC_STM32F4XX_SPI_DRIVERS_H_ */

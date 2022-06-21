@@ -7,9 +7,9 @@
 /******************************************************
 				1.GPIO CLK control
 *******************************************************/
-void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t action)
+void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t enable)
 {
-	if (action == ENABLE)
+	if (enable)
 	{
 		if (pGPIOx == GPIOA)
 		{
@@ -52,13 +52,49 @@ void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t action)
 
 	else
 	{
+		if (pGPIOx == GPIOA)
+		{
+			GPIOA_CLK_DI();
+		}
+		else if(pGPIOx == GPIOB)
+		{
+			GPIOB_CLK_DI();
+		}
+		else if (pGPIOx == GPIOC)
+		{
+			GPIOC_CLK_DI();
+		}
+		else if(pGPIOx == GPIOD)
+		{
+			GPIOD_CLK_DI();
+		}
+		else if(pGPIOx == GPIOE)
+		{
+			GPIOE_CLK_DI();
+		}
+		else if(pGPIOx == GPIOF)
+		{
+			GPIOF_CLK_DI();
+		}
+		else if(pGPIOx == GPIOG)
+		{
+			GPIOG_CLK_DI();
+		}
+		else if(pGPIOx == GPIOH)
+		{
+			GPIOH_CLK_DI();
+		}
+		else if(pGPIOx == GPIOI)
+		{
+			GPIOI_CLK_DI();
+		}
 
 	}
 
 }
 
 /******************************************************
-				2.GPIO de/init
+				2.GPIO initializations
 *******************************************************/
 void gpio_init(GPIO_Handle_t *pGPIOHandle)
 {
@@ -114,7 +150,7 @@ void gpio_init(GPIO_Handle_t *pGPIOHandle)
 		else if (pGPIOHandle->pGPIOx == GPIOE)
 			value = 4;
 		else if (pGPIOHandle->pGPIOx == GPIOF)
-			value = 4;
+			value = 5;
 		else if (pGPIOHandle->pGPIOx == GPIOG)
 			value = 6;
 		else if (pGPIOHandle->pGPIOx == GPIOH)
@@ -204,20 +240,21 @@ void gpio_deinit(GPIO_RegDef_t *pGPIOx)
 		GPIOI_RST();
 	}
 }
-void gpio_configure_pin(GPIO_Handle_t *GpioLed, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
+void gpio_configure_pin(GPIO_Handle_t *gpio_x_pin, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
 {
-	GpioLed->pGPIOx = gpio;
-	GpioLed->GPIO_PinCfng.PinNumber = pin_number;
-	GpioLed->GPIO_PinCfng.PinMode = output_mode;
-	GpioLed->GPIO_PinCfng.PinSpeed = pin_speed;
-	GpioLed->GPIO_PinCfng.PinOType = pin_out_mode;
-	GpioLed->GPIO_PinCfng.PinPuPdCtrl = internal_resistor_state;
+	gpio_x_pin->pGPIOx = gpio;
+	gpio_x_pin->GPIO_PinCfng.PinNumber = pin_number;
+	gpio_x_pin->GPIO_PinCfng.PinMode = output_mode;
+	gpio_x_pin->GPIO_PinCfng.PinSpeed = pin_speed;
+	gpio_x_pin->GPIO_PinCfng.PinOType = pin_out_mode;
+	gpio_x_pin->GPIO_PinCfng.PinPuPdCtrl = internal_resistor_state;
 }
 
 /******************************************************
-				3.GPIO read\write functions
+				3.GPIO read/write functions
 *******************************************************/
 uint8_t gpio_read_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
+
 {
 	uint8_t value;
 	value = (uint8_t)((pGPIOx->IDR >>PinNumber) & 0x00000001); // shift n-th bit on the LSB and masking the rest
@@ -287,6 +324,7 @@ void gpio_irq_priority(uint8_t IRQNumber, uint8_t IRQPriority)
 }
 void gpio_irq_handler(uint8_t PinNumber)
 {
+	//Clear the pending register pin
 	if(EXTI->PR & (1 << PinNumber))
 	{
 		EXTI->PR |= (1 << PinNumber);

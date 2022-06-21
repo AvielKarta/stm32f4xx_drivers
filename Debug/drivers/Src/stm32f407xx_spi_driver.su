@@ -1,4 +1,4 @@
 stm32f407xx_spi_driver.c:10:6:spi_clk_control	16	static
 stm32f407xx_spi_driver.c:55:6:spi_init	24	static
-stm32f407xx_spi_driver.c:71:6:spi_send	4	static
-stm32f407xx_spi_driver.c:75:6:spi_recieve	4	static
+stm32f407xx_spi_driver.c:87:6:spi_send	24	static
+stm32f407xx_spi_driver.c:119:6:spi_recieve	4	static

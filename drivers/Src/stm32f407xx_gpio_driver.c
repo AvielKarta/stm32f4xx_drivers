@@ -7,7 +7,7 @@
 /******************************************************
 				1.GPIO CLK control
 *******************************************************/
-void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t enable)
+void gpio_clk_control(GPIO_RegDef_t *pGPIOx,uint8_t enable)
 {
 	if (enable)
 	{
@@ -98,6 +98,8 @@ void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t enable)
 *******************************************************/
 void gpio_init(GPIO_Handle_t *pGPIOHandle)
 {
+
+	gpio_clk_control(pGPIOHandle->pGPIOx, ENABLE);/*Initializes the clock control*/
 	uint32_t temp=0;
 
 	/* 1.Configure GPIO pin mode - each pin has 2 dedicated bits in the GPIO mode register
@@ -240,14 +242,15 @@ void gpio_deinit(GPIO_RegDef_t *pGPIOx)
 		GPIOI_RST();
 	}
 }
-void gpio_configure_pin(GPIO_Handle_t *gpio_x_pin, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state)
+void gpio_configure_pin(GPIO_Handle_t *gpio_x_pin, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor, int alternate_function)
 {
 	gpio_x_pin->pGPIOx = gpio;
 	gpio_x_pin->GPIO_PinCfng.PinNumber = pin_number;
 	gpio_x_pin->GPIO_PinCfng.PinMode = output_mode;
 	gpio_x_pin->GPIO_PinCfng.PinSpeed = pin_speed;
 	gpio_x_pin->GPIO_PinCfng.PinOType = pin_out_mode;
-	gpio_x_pin->GPIO_PinCfng.PinPuPdCtrl = internal_resistor_state;
+	gpio_x_pin->GPIO_PinCfng.PinPuPdCtrl = internal_resistor;
+	gpio_x_pin->GPIO_PinCfng.PinAltFunc = alternate_function;
 }
 
 /******************************************************

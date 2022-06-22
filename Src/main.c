@@ -4,7 +4,7 @@
  */
 
 #include "stm32f407xx.h"
-
+#include <string.h>
 
 static int timeout = 2.5*M;
 
@@ -13,26 +13,15 @@ void delay(int timeout)
 	for(uint32_t i = 0 ; i < timeout ; i ++);
 }
 
-
-int main(void)
+void gpio_driver_function(void)
 {
-	int cnt = 0;
+	GPIO_Handle_t green_led, orange_led, red_led, blue_led, irq_pin;
 
-	GPIO_Handle_t green_led;
-	GPIO_Handle_t orange_led;
-	GPIO_Handle_t red_led;
-	GPIO_Handle_t blue_led;
-	GPIO_Handle_t irq_pin;
-
-	gpio_configure_pin(&green_led, GPIOD, 12, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	gpio_configure_pin(&orange_led, GPIOD, 13, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	gpio_configure_pin(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	gpio_configure_pin(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);
-	gpio_configure_pin(&irq_pin, GPIOA, 0, GPIO_MODE_IRQ_RT, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD);		/*Configures GPIOA_0 pin the work in interrupt mode*/
-
-	/*Enables the GPIO CLK*/
-	GPIO_CLKCtrl(GPIOD,ENABLE);
-	GPIO_CLKCtrl(GPIOA,ENABLE);
+	gpio_configure_pin(&green_led, GPIOD, 12, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
+	gpio_configure_pin(&orange_led, GPIOD, 13, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
+	gpio_configure_pin(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
+	gpio_configure_pin(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
+	gpio_configure_pin(&irq_pin, GPIOA, 0, GPIO_MODE_IRQ_RT, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);		/*Configures GPIOA_0 pin the work in interrupt mode*/
 
 	gpio_init(&green_led);
 	gpio_init(&orange_led);
@@ -40,11 +29,46 @@ int main(void)
 	gpio_init(&blue_led);
 	gpio_init(&irq_pin);
 
-
 	/*Enable and configure interrupt line 0*/
 	gpio_irq_set(EXTI0);
 	gpio_irq_priority(EXTI0, 15);
 	gpio_write_to_pin(GPIOD, 15, ENABLE);
+
+}
+void spi_driver_function(void)
+{
+	GPIO_Handle_t spi_pins;
+	gpio_configure_pin(&spi_pins, GPIOB, 12, GPIO_MODE_ALTFN, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 5);/*Enables NSS*/
+	spi_pins.GPIO_PinCfng.PinNumber = 13; /*Enables SCLK*/
+	gpio_init(&spi_pins);
+	spi_pins.GPIO_PinCfng.PinNumber = 14;/*Enables MISO*/
+	gpio_init(&spi_pins);
+	spi_pins.GPIO_PinCfng.PinNumber = 15;/*Enables MOSI*/
+	gpio_init(&spi_pins);
+
+
+	SPI_Handle_t spi;
+	spi.p_spi_x = SPI2;
+	spi.spi_config.BR = SPI_BR_CLK_DIV_256;
+	spi.spi_config.BUS = SPI_FULL_DUPLEX;
+	spi.spi_config.CPHA = SPI_CLK_PHASE_0;
+	spi.spi_config.CPOL = SPI_CLK_IDLE_0;
+	spi.spi_config.DFF = SPI_DFF_16_BIT;
+	spi.spi_config.MSTR = SPI_MASTER;
+	spi.spi_config.SSM = SPI_SSM_EN;
+	spi_init(&spi);
+	spi_enable(SPI2, ENABLE);
+
+}
+int main(void)
+{
+	int cnt = 0;
+	gpio_driver_function();
+
+	char spi_data[] = "spi_test_string";
+	spi_driver_function();
+	spi_send(SPI2, (uint8_t*)spi_data, strlen(spi_data));
+
 
 	while(1)
 	{
@@ -58,7 +82,6 @@ int main(void)
 
 void EXTI0_IRQHandler(void)
 	{
-	delay(0.1*K);
 	if (timeout == 2.5*M)
 		timeout = 100*K;
 	else

@@ -91,7 +91,7 @@ typedef struct
  * ==============
  * 		 	*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
  *	 		enable		:	enable or disable the GPIOx CLK.*/
-void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi);
+void gpio_clk_control(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi);
 
 /******************************************************
 				3.2.GPIO initializations
@@ -108,7 +108,7 @@ void GPIO_CLKCtrl(GPIO_RegDef_t *pGPIOx,uint8_t EnOrDi);
  * 			pin_out_mode			 : pin_out_mode
  * 			internal_resistor_state  : internal_resistor_state
  */
-void gpio_configure_pin(GPIO_Handle_t *gpio_x_pin, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state);
+void gpio_configure_pin(GPIO_Handle_t *gpio_x_pin, GPIO_RegDef_t* gpio, int pin_number, int output_mode, int pin_speed, int pin_out_mode,int internal_resistor_state, int alternate_function);
 /* Initializes all relevant registers (MODE, SPEED, OTYPE etc.. in GPIO_RegDef_t) for the given configured pin
  * based on the pGPIOHandle->GPIO_PinCfn parameters given by user
  * Arguments:

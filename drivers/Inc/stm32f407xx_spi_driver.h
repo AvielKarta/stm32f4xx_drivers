@@ -93,8 +93,8 @@
 #define 	CR1_BIT3_BR0				3
 #define 	CR1_BIT4_BR1				4
 #define 	CR1_BIT5_BR2				5
-#define 	CR1_BIT6_LSB				6
-#define 	CR1_BIT7_DFF				7
+#define 	CR1_BIT6_SPE				6
+#define 	CR1_BIT7_LSB				7
 #define 	CR1_BIT8_SSI				8
 #define 	CR1_BIT9_SSM				9
 #define 	CR1_BIT10_RXONLY			10
@@ -158,7 +158,7 @@ typedef struct
 	uint8_t 	DFF;			/*Data Frame format*/
 	uint8_t 	SSM;			/*slave select management*/
 	uint8_t 	BUS;			/*Bus communication method Full/Half duplex/simplex */
-}SPI_PinConfig_t;
+}SPI_Config_t;
 
 /******************************************************
 				2.2.SPI handler structure
@@ -166,7 +166,7 @@ typedef struct
 typedef struct
 {
 	SPI_RegDef_t 		*p_spi_x;		/*Base address of the SPIx base address*/
-	SPI_PinConfig_t 	spi_pin_config;	/**/
+	SPI_Config_t 	spi_config;	/**/
 }SPI_Handle_t;
 
 
@@ -188,7 +188,7 @@ typedef struct
 void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t EnOrDi);
 
 /******************************************************
-				3.1.SPI initializations
+				3.2.SPI initializations
 *******************************************************/
 
 /* Initializes all relevant bits in SPI registers (mainly in control register 1 SPI_CR1) based on user initialization in main
@@ -197,6 +197,13 @@ void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t EnOrDi);
  *  		spi_handle:	pointer to structure contains all relevant data regard to SPI peripheral instance.
  */
 void spi_init(SPI_Handle_t* spi_handle);
+/* Enable/Disable the SPI peripheral since configuring parameters is not recommended while peripheral is enabled
+ * Arguments:
+ * ==============
+ *  		spi_handle:	pointer to structure contains all relevant data regard to SPI peripheral instance.
+ *  		enable	  : enable or disable the peripheral
+ */
+void spi_enable(SPI_RegDef_t *p_spi_x, uint8_t enable);
 
 /******************************************************
 				3.3.SPI send/receive functions
@@ -213,12 +220,5 @@ void spi_init(SPI_Handle_t* spi_handle);
 void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len);
 
 
-
-
-//void spi_irq_set(uint8_t IRQNumber);
-//void spi_irq_clear(uint8_t IRQNumber);
-//void spi_irq_priority(uint8_t IRQNumber, uint8_t IRQPriority);
-//void spi_irq_handler(uint8_t PinNumber);
-//void spi_receive_data(SPI_Handle_t* spi_handle);
 
 #endif /* INC_STM32F4XX_SPI_DRIVERS_H_ */

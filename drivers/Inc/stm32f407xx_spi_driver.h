@@ -166,7 +166,7 @@ typedef struct
 typedef struct
 {
 	SPI_RegDef_t 		*p_spi_x;		/*Base address of the SPIx base address*/
-	SPI_Config_t 	spi_config;	/**/
+	SPI_Config_t 		spi_config;	/**/
 }SPI_Handle_t;
 
 
@@ -191,6 +191,7 @@ void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t EnOrDi);
 				3.2.SPI initializations
 *******************************************************/
 
+void spi_configure_pin(SPI_Handle_t* spi, SPI_RegDef_t* spi_x, int cpha, int cpol, int master, int baudrate, int ssm, int dff, int bus_cfg);
 /* Initializes all relevant bits in SPI registers (mainly in control register 1 SPI_CR1) based on user initialization in main
  * Arguments:
  * ==============
@@ -204,6 +205,12 @@ void spi_init(SPI_Handle_t* spi_handle);
  *  		enable	  : enable or disable the peripheral
  */
 void spi_enable(SPI_RegDef_t *p_spi_x, uint8_t enable);
+/* Set the SSI bit in order to avoid the MODEF fault handler
+ * Arguments:
+ * ==============
+ *  		spi_handle:	pointer to structure contains all relevant data regard to SPI peripheral instance.
+ *  		enable	  : enable or disable the peripheral
+ */void spi_ssi_enable(SPI_RegDef_t *p_spi_x, uint8_t enable);
 
 /******************************************************
 				3.3.SPI send/receive functions

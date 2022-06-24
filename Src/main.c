@@ -37,6 +37,8 @@ void gpio_driver_function(void)
 }
 void spi_driver_function(void)
 {
+	char spi_data[] = "spi_test_string";
+
 	GPIO_Handle_t spi_pins;
 	gpio_configure_pin(&spi_pins, GPIOB, 12, GPIO_MODE_ALTFN, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 5);/*Enables NSS*/
 	spi_pins.GPIO_PinCfng.PinNumber = 13; /*Enables SCLK*/
@@ -47,27 +49,26 @@ void spi_driver_function(void)
 	gpio_init(&spi_pins);
 
 
-	SPI_Handle_t spi;
-	spi.p_spi_x = SPI2;
-	spi.spi_config.BR = SPI_BR_CLK_DIV_256;
-	spi.spi_config.BUS = SPI_FULL_DUPLEX;
-	spi.spi_config.CPHA = SPI_CLK_PHASE_0;
-	spi.spi_config.CPOL = SPI_CLK_IDLE_0;
-	spi.spi_config.DFF = SPI_DFF_16_BIT;
-	spi.spi_config.MSTR = SPI_MASTER;
-	spi.spi_config.SSM = SPI_SSM_EN;
-	spi_init(&spi);
+	SPI_Handle_t spi2_handler;
+	spi_configure_pin(&spi2_handler, SPI2, SPI_CLK_PHASE_0, SPI_CLK_IDLE_0, SPI_MASTER, SPI_BR_CLK_DIV_256, SPI_SSM_EN, SPI_DFF_16_BIT, SPI_FULL_DUPLEX);/*Configures parameters for SPI2*/
+	spi_init(&spi2_handler);
+	spi_ssi_enable(SPI2, ENABLE);
 	spi_enable(SPI2, ENABLE);
 
+	spi_send(SPI2, (uint8_t*)spi_data, strlen(spi_data));
+
+
 }
+
 int main(void)
 {
 	int cnt = 0;
+
 	gpio_driver_function();
 
-	char spi_data[] = "spi_test_string";
+
 	spi_driver_function();
-	spi_send(SPI2, (uint8_t*)spi_data, strlen(spi_data));
+
 
 
 	while(1)

@@ -225,7 +225,15 @@ void spi_enable(SPI_RegDef_t *p_spi_x, uint8_t enable);
  *  			len 	  :	number of data frames
  */
 void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len);
-
+/* Sends data frames (8 or 16 bit) to SPI_DR (data register), each frame is sent to SPI_DR.
+ * Next frame will be sent once TX buffer is empty (indication via SPI_SR (status register) TXE bit) function terminates once all frames sent(len).
+ * Arguments:
+ * ==============
+ * 				p_spi_x   :	SPI registers structure
+ *  			*pRxbuffer:	pointer to stored data frames
+ *  			len 	  :	number of data frames
+ */
+void spi_recieve(SPI_RegDef_t* p_spi_x,uint8_t *pRxbuffer, uint32_t len);
 
 
 #endif /* INC_STM32F4XX_SPI_DRIVERS_H_ */

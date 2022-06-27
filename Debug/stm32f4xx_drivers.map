@@ -109,7 +109,7 @@ Discarded input sections
  .text.spi_clk_control
                 0x0000000000000000       0xf0 drivers/Src/stm32f407xx_spi_driver.o
  .text.spi_recieve
-                0x0000000000000000        0xe drivers/Src/stm32f407xx_spi_driver.o
+                0x0000000000000000       0x76 drivers/Src/stm32f407xx_spi_driver.o
  .debug_macro   0x0000000000000000      0xa66 drivers/Src/stm32f407xx_spi_driver.o
  .debug_macro   0x0000000000000000       0x22 drivers/Src/stm32f407xx_spi_driver.o
  .debug_macro   0x0000000000000000       0x8e drivers/Src/stm32f407xx_spi_driver.o
@@ -555,17 +555,17 @@ LOAD c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x00000000000001b5       0x22 c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
 OUTPUT(stm32f4xx_drivers.elf elf32-littlearm)
 
-.debug_info     0x0000000000000000     0x1981
+.debug_info     0x0000000000000000     0x19b0
  .debug_info    0x0000000000000000      0xc2e Src/main.o
  .debug_info    0x0000000000000c2e       0x22 Startup/startup_stm32f407vgtx.o
  .debug_info    0x0000000000000c50      0x7ed drivers/Src/stm32f407xx_gpio_driver.o
- .debug_info    0x000000000000143d      0x544 drivers/Src/stm32f407xx_spi_driver.o
+ .debug_info    0x000000000000143d      0x573 drivers/Src/stm32f407xx_spi_driver.o
 
-.debug_abbrev   0x0000000000000000      0x4c3
+.debug_abbrev   0x0000000000000000      0x4ad
  .debug_abbrev  0x0000000000000000      0x1fb Src/main.o
  .debug_abbrev  0x00000000000001fb       0x12 Startup/startup_stm32f407vgtx.o
  .debug_abbrev  0x000000000000020d      0x191 drivers/Src/stm32f407xx_gpio_driver.o
- .debug_abbrev  0x000000000000039e      0x125 drivers/Src/stm32f407xx_spi_driver.o
+ .debug_abbrev  0x000000000000039e      0x10f drivers/Src/stm32f407xx_spi_driver.o
 
 .debug_aranges  0x0000000000000000      0x138
  .debug_aranges
@@ -612,21 +612,21 @@ OUTPUT(stm32f4xx_drivers.elf elf32-littlearm)
  .debug_macro   0x0000000000001d7a       0x90 drivers/Src/stm32f407xx_gpio_driver.o
  .debug_macro   0x0000000000001e0a       0x90 drivers/Src/stm32f407xx_spi_driver.o
 
-.debug_line     0x0000000000000000     0x1197
+.debug_line     0x0000000000000000     0x11a5
  .debug_line    0x0000000000000000      0x5ef Src/main.o
  .debug_line    0x00000000000005ef       0x84 Startup/startup_stm32f407vgtx.o
  .debug_line    0x0000000000000673      0x637 drivers/Src/stm32f407xx_gpio_driver.o
- .debug_line    0x0000000000000caa      0x4ed drivers/Src/stm32f407xx_spi_driver.o
+ .debug_line    0x0000000000000caa      0x4fb drivers/Src/stm32f407xx_spi_driver.o
 
-.debug_str      0x0000000000000000     0x8b2b
+.debug_str      0x0000000000000000     0x8b35
  .debug_str     0x0000000000000000     0x86e9 Src/main.o
                                        0x8942 (size before relaxing)
  .debug_str     0x00000000000086e9       0x31 Startup/startup_stm32f407vgtx.o
                                          0x76 (size before relaxing)
  .debug_str     0x000000000000871a      0x358 drivers/Src/stm32f407xx_gpio_driver.o
                                        0x58a5 (size before relaxing)
- .debug_str     0x0000000000008a72       0xb9 drivers/Src/stm32f407xx_spi_driver.o
-                                       0x5731 (size before relaxing)
+ .debug_str     0x0000000000008a72       0xc3 drivers/Src/stm32f407xx_spi_driver.o
+                                       0x573b (size before relaxing)
 
 .comment        0x0000000000000000       0x7b
  .comment       0x0000000000000000       0x7b Src/main.o
@@ -634,10 +634,10 @@ OUTPUT(stm32f4xx_drivers.elf elf32-littlearm)
  .comment       0x000000000000007b       0x7c drivers/Src/stm32f407xx_gpio_driver.o
  .comment       0x000000000000007b       0x7c drivers/Src/stm32f407xx_spi_driver.o
 
-.debug_frame    0x0000000000000000      0x598
+.debug_frame    0x0000000000000000      0x5a0
  .debug_frame   0x0000000000000000       0xc4 Src/main.o
  .debug_frame   0x00000000000000c4      0x218 drivers/Src/stm32f407xx_gpio_driver.o
- .debug_frame   0x00000000000002dc      0x120 drivers/Src/stm32f407xx_spi_driver.o
- .debug_frame   0x00000000000003fc       0x2c c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
- .debug_frame   0x0000000000000428       0xac c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_addsubdf3.o)
- .debug_frame   0x00000000000004d4       0xc4 c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_cmpdf2.o)
+ .debug_frame   0x00000000000002dc      0x128 drivers/Src/stm32f407xx_spi_driver.o
+ .debug_frame   0x0000000000000404       0x2c c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
+ .debug_frame   0x0000000000000430       0xac c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x00000000000004dc       0xc4 c:/st/stm32cubeide_1.5.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_cmpdf2.o)

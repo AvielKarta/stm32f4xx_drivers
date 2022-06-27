@@ -151,8 +151,30 @@ void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len)
 		}
 	}
 }
-void spi_recieve()
+void spi_recieve(SPI_RegDef_t* p_spi_x,uint8_t *pRxbuffer, uint32_t len)
 {
+	while(len > 0)
+		{
+			if (((p_spi_x->SPI_SR)&(1<<SR_BIT0_RXNE)) != 0)
+			/*If RX buffer get the data from the shift register*/
+			{
+				if (((p_spi_x->SPI_CR1)&(1<<CR1_BIT11_DFF)) == SPI_DFF_8_BIT)
+				/*If Frame format is 8 bit*/
+				{
+					*pRxbuffer |= p_spi_x->SPI_DR;
+					pRxbuffer++;
+					len--;
+				}
+				else
+				/*If Frame format is 16 bit*/
+				{
+					*((uint16_t*)pRxbuffer) |= p_spi_x->SPI_DR;
+					len = len-2;
+					(uint16_t*)pRxbuffer++;
+
+				}
+			}
+		}
 
 }
 

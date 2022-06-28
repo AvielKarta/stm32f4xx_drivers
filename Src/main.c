@@ -32,12 +32,12 @@ void gpio_driver_function(void)
 	/*Enable and configure interrupt line 0*/
 	gpio_irq_set(EXTI0);
 	gpio_irq_priority(EXTI0, 15);
-	gpio_write_to_pin(GPIOD, 15, ENABLE);
+
 
 }
 void spi_driver_function(void)
 {
-	char spi_data[] = "spi_test_string";
+
 
 	GPIO_Handle_t spi_pins;
 	gpio_configure_pin(&spi_pins, GPIOB, 12, GPIO_MODE_ALTFN, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 5);/*Enables NSS*/
@@ -54,29 +54,41 @@ void spi_driver_function(void)
 	spi_init(&spi2_handler);
 	spi_ssi_enable(SPI2, ENABLE);
 	spi_enable(SPI2, ENABLE);
-
-	spi_send(SPI2, (uint8_t*)spi_data, strlen(spi_data));
-
-
 }
 
 int main(void)
 {
-	int cnt = 0;
 
+	//TX STM code
+	char spi_tx_data[] = "blue";
 	gpio_driver_function();
-
-
 	spi_driver_function();
-
 
 
 	while(1)
 	{
 		delay(timeout);
-		gpio_toggle_pin(GPIOD, 12+(cnt++)%4);
+		spi_send(SPI2, (uint8_t*)spi_tx_data, strlen(spi_tx_data));
+	}
+
+
+	//RX STM code
+	char spi_rx_data[strlen(spi_tx_data)];
+	gpio_driver_function();
+	spi_driver_function();
+
+
+	while(1)
+	{
+		delay(timeout);
+		spi_recieve(SPI2, (uint8_t*)spi_rx_data, strlen(spi_tx_data));
+		if (!strcmp(spi_rx_data, "blue"))
+		{
+		gpio_write_to_pin(GPIOD, 15, ENABLE);
+		}
 
 	}
+
 
 	return 0;
 }

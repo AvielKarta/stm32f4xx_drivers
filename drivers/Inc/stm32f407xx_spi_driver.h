@@ -66,26 +66,32 @@
 #define 	SPI_SSM_EN				1
 
 /******************************************************
-				1.8.SPI BUS configuration
+				1.8.SPI Internal Slave Select (SSI BIT 8)
+*******************************************************/
+#define 	SPI_SSI_DIS				0
+#define 	SPI_SSI_EN				1
+
+/******************************************************
+				1.9.SPI BUS configuration
 *******************************************************/
 #define 	SPI_FULL_DUPLEX				1			/**/
 #define 	SPI_HALF_DUPLEX				2			/**/
 #define 	SPI_SIMPLEX_RX_ONLY			3			/**/
 
 /******************************************************
-				1.9.SPI Bidirectional data mode enable (BIDIMODE BIT)
+				1.10.SPI Bidirectional data mode enable (BIDIMODE BIT)
 *******************************************************/
 #define 	SPI_UNIDI_MODE				0			/*2-line unidirectional data mode selected*/
 #define 	SPI_BIDI_MODE				1			/*1-line bidirectional data mode selected*/
 
 /******************************************************
-				1.10.SPI Bidirectional output enable (BIDIOE BIT)
+				1.11.SPI Bidirectional output enable (BIDIOE BIT)
 *******************************************************/
 #define 	SPI_BIDI_OUT_DIS		0			/*Output disabled (receive-only mode)*/
 #define 	SPI_BIDI_OUT_EN			1			/*Output enabled (transmit-only mode)*/
 
 /******************************************************
-				1.11.SPI Control register 1 bit fields macros
+				1.12.SPI Control register 1 bit fields macros
 *******************************************************/
 #define 	CR1_BIT0_CPHA				0
 #define 	CR1_BIT1_CPOL				1
@@ -105,7 +111,7 @@
 #define 	CR1_BIT15_BIDIMODE			15
 
 /******************************************************
-				1.12.SPI Control register 2 bit fields macros
+				1.13.SPI Control register 2 bit fields macros
 *******************************************************/
 #define 	CR2_BIT0_RXDMAEN			0
 #define 	CR2_BIT1_TXDMAEN			1
@@ -116,7 +122,7 @@
 #define 	CR2_BIT7_TXEIE				7
 
 /******************************************************
-				1.13.SPI Status register bit fields macros
+				1.14.SPI Status register bit fields macros
 *******************************************************/
 #define 	SR_BIT0_RXNE				0
 #define 	SR_BIT1_TXE					1
@@ -128,14 +134,14 @@
 #define 	SR_BIT7_FRE					7
 
 /******************************************************
-				1.14.SPI RECIEVE BUFFER STATUS
+				1.15.SPI RECIEVE BUFFER STATUS
 *******************************************************/
 #define 	RX_BUFFER_EMPTY				0
 #define 	RX_BUFFER_NOT_EMPTY			1
 
 
 /******************************************************
-				1.15.SPI TRANSMIT BUFFER STATUS
+				1.16.SPI TRANSMIT BUFFER STATUS
 *******************************************************/
 #define 	TX_BUFFER_NOT_EMPTY			0
 #define 	TX_BUFFER_EMPTY				1
@@ -157,6 +163,7 @@ typedef struct
 	uint8_t 	BR;				/*Baud rate control*/
 	uint8_t 	DFF;			/*Data Frame format*/
 	uint8_t 	SSM;			/*slave select management*/
+	uint8_t 	SSI;			/*internal slave select*/
 	uint8_t 	BUS;			/*Bus communication method Full/Half duplex/simplex */
 }SPI_Config_t;
 
@@ -191,7 +198,7 @@ void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t EnOrDi);
 				3.2.SPI initializations
 *******************************************************/
 
-void spi_configure_pin(SPI_Handle_t* spi, SPI_RegDef_t* spi_x, int cpha, int cpol, int master, int baudrate, int ssm, int dff, int bus_cfg);
+void spi_configure_pin(SPI_Handle_t* spi, SPI_RegDef_t* spi_x, int cpha, int cpol, int master, int baudrate, int ssm, int ssi, int dff, int bus_cfg);
 /* Initializes all relevant bits in SPI registers (mainly in control register 1 SPI_CR1) based on user initialization in main
  * Arguments:
  * ==============

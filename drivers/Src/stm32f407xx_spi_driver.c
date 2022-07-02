@@ -61,7 +61,7 @@ void spi_clk_control(SPI_Handle_t* spi_handle,uint8_t enable)
 /******************************************************
 				2.SPI
 *******************************************************/
-void spi_configure_pin(SPI_Handle_t* spi, SPI_RegDef_t* spi_x, int cpha, int cpol, int master, int baudrate, int ssm, int dff, int bus_cfg)
+void spi_configure_pin(SPI_Handle_t* spi, SPI_RegDef_t* spi_x, int cpha, int cpol, int master, int baudrate, int ssm, int ssi, int dff, int bus_cfg)
 {
 
 	spi->p_spi_x = spi_x;
@@ -70,15 +70,16 @@ void spi_configure_pin(SPI_Handle_t* spi, SPI_RegDef_t* spi_x, int cpha, int cpo
 	spi->spi_config.MSTR = master;
 	spi->spi_config.BR = baudrate;
 	spi->spi_config.SSM = ssm;
+	spi->spi_config.SSI = ssi;
 	spi->spi_config.DFF = dff;
-
 	spi->spi_config.BUS = bus_cfg;
 
 }
 void spi_init(SPI_Handle_t* spi_handle)
 {
-	uint32_t temp = 0;
+	spi_clk_control(spi_handle, ENABLE);
 
+	uint32_t temp = 0;
 	temp |= (spi_handle->spi_config.CPHA)<<CR1_BIT0_CPHA;
 	temp |= (spi_handle->spi_config.CPOL)<<CR1_BIT1_CPOL;
 	temp |= (spi_handle->spi_config.MSTR)<<CR1_BIT2_MSTR;
@@ -103,6 +104,7 @@ void spi_init(SPI_Handle_t* spi_handle)
 		}
 	}
 	spi_handle->p_spi_x->SPI_CR1 = temp;
+
 }
 void spi_enable(SPI_RegDef_t *p_spi_x, uint8_t enable)
 {

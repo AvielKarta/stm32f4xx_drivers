@@ -8,6 +8,10 @@
 
 static int timeout = 2.5*M;
 
+#define		MASTER		1
+#define		SLAVE		0
+#define		DEVICE		SLAVE
+
 void delay(int timeout)
 {
 	for(uint32_t i = 0 ; i < timeout ; i ++);
@@ -40,56 +44,56 @@ void spi_driver_function(void)
 
 
 	GPIO_Handle_t spi_pins;
-	gpio_configure_pin(&spi_pins, GPIOB, 12, GPIO_MODE_ALTFN, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 5);/*Enables NSS*/
-	spi_pins.GPIO_PinCfng.PinNumber = 13; /*Enables SCLK*/
+	gpio_configure_pin(&spi_pins, GPIOB, 13, GPIO_MODE_ALTFN, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 5);/*Enables CLK*/
+	spi_pins.GPIO_PinCfng.PinNumber = 12; /*Enables NSS*/
 	gpio_init(&spi_pins);
 	spi_pins.GPIO_PinCfng.PinNumber = 14;/*Enables MISO*/
 	gpio_init(&spi_pins);
 	spi_pins.GPIO_PinCfng.PinNumber = 15;/*Enables MOSI*/
 	gpio_init(&spi_pins);
 
-
 	SPI_Handle_t spi2_handler;
-	spi_configure_pin(&spi2_handler, SPI2, SPI_CLK_PHASE_0, SPI_CLK_IDLE_0, SPI_MASTER, SPI_BR_CLK_DIV_256, SPI_SSM_EN, SPI_DFF_16_BIT, SPI_FULL_DUPLEX);/*Configures parameters for SPI2*/
-	spi_init(&spi2_handler);
-	spi_ssi_enable(SPI2, ENABLE);
-	spi_enable(SPI2, ENABLE);
+
+	if (DEVICE==MASTER)
+	{
+		spi_configure_pin(&spi2_handler, SPI2, SPI_CLK_PHASE_0, SPI_CLK_IDLE_0, SPI_MASTER, SPI_BR_CLK_DIV_2, SPI_SSM_EN, SPI_SSI_EN, SPI_DFF_8_BIT, SPI_FULL_DUPLEX);/*Configures parameters for SPI2*/
+		spi_init(&spi2_handler);
+	}
+	else
+	{
+		spi_configure_pin(&spi2_handler, SPI2, SPI_CLK_PHASE_0, SPI_CLK_IDLE_0, SPI_SLAVE, SPI_BR_CLK_DIV_2, SPI_SSM_EN, SPI_SSI_DIS, SPI_DFF_8_BIT, SPI_FULL_DUPLEX);/*Configures parameters for SPI2*/
+		spi_init(&spi2_handler);
+	}
+
+
+
+
 }
 
 int main(void)
 {
-
-	//TX STM code
-	char spi_tx_data[] = "blue";
 	gpio_driver_function();
-	spi_driver_function();
-
-
-	while(1)
+	if (DEVICE == MASTER)
 	{
-		delay(timeout);
+		char spi_tx_data[] = "blue";
+
+		spi_driver_function();
+		spi_ssi_enable(SPI2, ENABLE);
+		spi_enable(SPI2, ENABLE);
 		spi_send(SPI2, (uint8_t*)spi_tx_data, strlen(spi_tx_data));
 	}
-
-
-	//RX STM code
-	char spi_rx_data[strlen(spi_tx_data)];
-	gpio_driver_function();
-	spi_driver_function();
-
-
-	while(1)
+	else
 	{
-		delay(timeout);
-		spi_recieve(SPI2, (uint8_t*)spi_rx_data, strlen(spi_tx_data));
+		char spi_rx_data[5];
+		spi_driver_function();
+		spi_ssi_enable(SPI2, DISABLE);
+		spi_enable(SPI2, ENABLE);
+		spi_recieve(SPI2, (uint8_t*)spi_rx_data, 5);
 		if (!strcmp(spi_rx_data, "blue"))
 		{
 		gpio_write_to_pin(GPIOD, 15, ENABLE);
 		}
-
 	}
-
-
 	return 0;
 }
 

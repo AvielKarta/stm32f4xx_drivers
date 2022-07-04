@@ -148,6 +148,24 @@
 
 
 
+#define SPI_SR_RXNE						0
+#define SPI_SR_TXE				 		1
+#define SPI_SR_CHSIDE				 	2
+#define SPI_SR_UDR					 	3
+#define SPI_SR_CRCERR				 	4
+#define SPI_SR_MODF					 	5
+#define SPI_SR_OVR					 	6
+#define SPI_SR_BSY					 	7
+#define SPI_SR_FRE					 	8
+
+#define FLAG_RESET          0
+#define FLAG_SET 			1
+
+
+#define SPI_TXE_FLAG    ( 1 << SPI_SR_TXE)
+#define SPI_RXNE_FLAG   ( 1 << SPI_SR_RXNE)
+#define SPI_BUSY_FLAG   ( 1 << SPI_SR_BSY)
+
 /******************************************************
 				2.SPI structure definitions
 *******************************************************/
@@ -241,6 +259,5 @@ void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len);
  *  			len 	  :	number of data frames
  */
 void spi_recieve(SPI_RegDef_t* p_spi_x,uint8_t *pRxbuffer, uint32_t len);
-
 
 #endif /* INC_STM32F4XX_SPI_DRIVERS_H_ */

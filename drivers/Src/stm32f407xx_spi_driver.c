@@ -84,7 +84,7 @@ void spi_init(SPI_Handle_t* spi_handle)
 	temp |= (spi_handle->spi_config.CPOL)<<CR1_BIT1_CPOL;
 	temp |= (spi_handle->spi_config.MSTR)<<CR1_BIT2_MSTR;
 	temp |= (spi_handle->spi_config.BR)<<CR1_BIT3_BR0;
-	temp |= ENABLE<<CR1_BIT7_LSB;
+	temp |= DISABLE<<CR1_BIT7_LSB;
 	temp |= (spi_handle->spi_config.DFF)<<CR1_BIT11_DFF;
 	temp |= (spi_handle->spi_config.SSM)<<CR1_BIT9_SSM;
 
@@ -121,7 +121,6 @@ void spi_ssi_enable(SPI_RegDef_t *p_spi_x, uint8_t enable)
 /******************************************************
 				3.3.SPI send/receive functions
 *******************************************************/
-
 void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len)
 {
 	while(len > 0)

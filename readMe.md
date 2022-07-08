@@ -1,6 +1,6 @@
 Hi there 👋  
 
-I'm currently working on an Embedded project which includes driver development of GPIO and SPI driveres to STM32F407 Discovery boards
+I'm currently working on an embedded project which includes driver development of GPIO and SPI drivers to STM32F407 Discovery boards.
 
 
 ![](https://github-readme-stats.vercel.app/api?username=AvielKarta&show_icons=true&theme=dark&line_height=33)

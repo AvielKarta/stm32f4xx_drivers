@@ -3,7 +3,11 @@ Hi there 👋
 I'm currently working on an Embedded project which includes driver development of GPIO and SPI driveres to STM32F407 Discovery boards
 
 
-[![My Github Stats](https://github-readme-stats.vercel.app/api?username=AvielKarta)](https://github.com/anuraghazra/github-readme-stats)
+![](https://github-readme-stats.vercel.app/api?username=AvielKarta&show_icons=true&theme=dark&line_height=33)
+![](https://github-readme-stats.vercel.app/api/top-langs/?username=AvielKarta&hide=C%23%0A,html&theme=dark)
+
+[![ReadMe Card](https://github-readme-stats.vercel.app/api/pin/?username=AvielKarta&repo=stm32f4xx_drivers&theme=dark)](https://github.com/AvielKarta/stm32f4xx_drivers)
+
 
 ## 🔧 Technologies & Tools
 

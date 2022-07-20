@@ -6,11 +6,11 @@
 #include "stm32f407xx.h"
 #include <string.h>
 
-static int timeout = 2.5*M;
+static int led_cnt;
 
 #define		MASTER		1
 #define		SLAVE		0
-#define		DEVICE		SLAVE
+#define		DEVICE		MASTER
 
 void delay(int timeout)
 {
@@ -25,15 +25,17 @@ void gpio_driver_function(void)
 	gpio_configure_pin(&orange_led, GPIOD, 13, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
 	gpio_configure_pin(&red_led, GPIOD, 14, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
 	gpio_configure_pin(&blue_led, GPIOD, 15, GPIO_MODE_OUT, GPIO_SPPED_LOW, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
-	gpio_configure_pin(&irq_pin, GPIOA, 0, GPIO_MODE_IRQ_RT, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);		/*Configures GPIOA_0 pin the work in interrupt mode*/
 
 	gpio_init(&green_led);
 	gpio_init(&orange_led);
 	gpio_init(&red_led);
 	gpio_init(&blue_led);
+
+	gpio_configure_pin(&irq_pin, GPIOA, 0, GPIO_MODE_IRQ_RT, GPIO_SPPED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);		/*Configures GPIOA_0 pin the work in interrupt mode*/
 	gpio_init(&irq_pin);
 
 	/*Enable and configure interrupt line 0*/
+
 	gpio_irq_set(EXTI0);
 	gpio_irq_priority(EXTI0, 15);
 
@@ -67,45 +69,81 @@ void spi_driver_function(void)
 
 int main(void)
 {
-	//gpio_driver_function();
+	gpio_driver_function();
+	spi_driver_function();
+	spi_ssi_enable(SPI2, ENABLE);
+	spi_enable(SPI2, ENABLE);
+
 	if (DEVICE == MASTER)
 	{
-		char spi_tx_data[] = "blue";
-		spi_driver_function();
-		spi_ssi_enable(SPI2, ENABLE);
-		spi_enable(SPI2, ENABLE);
 		while(1)
 		{
-			spi_send(SPI2, (uint8_t*)spi_tx_data, strlen(spi_tx_data));
-			delay(1000);
+
 		}
 
 	}
 	else
 	{
-		char spi_rx_data[5];
-		spi_driver_function();
-		spi_ssi_enable(SPI2, DISABLE);
-		spi_enable(SPI2, ENABLE);
-
+		char spi_rx_data[7] = {0};
 		while(1)
+		{
+			spi_recieve(SPI2, (uint8_t*)spi_rx_data, 7);
+			if (strstr(spi_rx_data, "green"))
 			{
-			spi_recieve(SPI2, (uint8_t*)spi_rx_data, 5);
-			if (!strcmp(spi_rx_data, "blue"))
-				{
-				gpio_write_to_pin(GPIOD, 15, ENABLE);
-				}
+				gpio_write_to_pin(GPIOD, 12, ENABLE);
+				delay(1000);
+				gpio_write_to_pin(GPIOD, 12, DISABLE);
 			}
+			else if (strstr(spi_rx_data, "orange"))
+			{
+				gpio_write_to_pin(GPIOD, 13, ENABLE);
+				delay(1000);
+				gpio_write_to_pin(GPIOD, 13, DISABLE);
+			}
+			else if (strstr(spi_rx_data, "red"))
+			{
+				gpio_write_to_pin(GPIOD, 14, ENABLE);
+				delay(1000);
+				gpio_write_to_pin(GPIOD, 14, DISABLE);
+			}
+			else if (strstr(spi_rx_data, "blue"))
+			{
+				gpio_write_to_pin(GPIOD, 15, ENABLE);
+				delay(1000);
+				gpio_write_to_pin(GPIOD, 15, DISABLE);
+			}
+		}
 	}
+	while(1)
+		{
+
+		}
 	return 0;
 }
 
 void EXTI0_IRQHandler(void)
+{
+	if (MASTER)
 	{
-	if (timeout == 2.5*M)
-		timeout = 100*K;
-	else
-		timeout = 2.5*M;
-	gpio_irq_handler(0);
+		char spi_tx_data[7];
+		if(led_cnt%4 == 0)
+		{
+			strcpy(spi_tx_data, "green");
+		}
+		else if(led_cnt%4 == 1)
+		{
+			strcpy(spi_tx_data,"orange");
+		}
+		else if(led_cnt%4 == 2)
+		{
+			strcpy(spi_tx_data,"red");
+		}
+		else if(led_cnt%4 == 3)
+		{
+			strcpy(spi_tx_data,"blue");
+		}
+		spi_send(SPI2, (uint8_t*)spi_tx_data, strlen(spi_tx_data));
+		gpio_irq_handler(0);
 	}
+}
 

@@ -250,7 +250,7 @@ void gpio_configure_pin(GPIO_Handle_t *gpio_x_pin, GPIO_RegDef_t* gpio, int pin_
 	gpio_x_pin->GPIO_PinCfng.PinSpeed = pin_speed;
 	gpio_x_pin->GPIO_PinCfng.PinOType = pin_out_mode;
 	gpio_x_pin->GPIO_PinCfng.PinPuPdCtrl = internal_resistor;
-//	gpio_x_pin->GPIO_PinCfng.PinAltFunc = alternate_function;
+	gpio_x_pin->GPIO_PinCfng.PinAltFunc = alternate_function;
 }
 
 /******************************************************

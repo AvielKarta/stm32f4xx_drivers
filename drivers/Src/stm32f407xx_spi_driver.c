@@ -91,12 +91,12 @@ void spi_init(SPI_Handle_t* spi_handle)
 	if (spi_handle->spi_config.BUS == SPI_HALF_DUPLEX)
 	{
 		/*Half duplex - BIDIMODE bit should be enabled*/
-		temp |= SPI_BIDI_MODE<<CR1_BIT15_BIDIMODE;
+		temp |= ENABLE<<CR1_BIT15_BIDIMODE;
 	}
 	else
 	{
 		/*Full duplex - BIDIMODE bit should be reset*/
-		temp |= SPI_UNIDI_MODE<<CR1_BIT15_BIDIMODE;
+		temp &= ~(ENABLE<<CR1_BIT15_BIDIMODE);
 		if (spi_handle->spi_config.BUS == SPI_SIMPLEX_RX_ONLY)
 		{
 			/*Simplex RX only - RXONLY bit should be enabled*/
@@ -131,14 +131,14 @@ void spi_send(SPI_RegDef_t* p_spi_x,uint8_t *pTxbuffer, uint32_t len)
 			if (((p_spi_x->SPI_CR1)&(1<<CR1_BIT11_DFF)) == SPI_DFF_8_BIT)
 			/*If Frame format is 8 bit*/
 			{
-				p_spi_x->SPI_DR |= *pTxbuffer;
+				p_spi_x->SPI_DR = *pTxbuffer;
 				pTxbuffer++;
 				len--;
 			}
 			else
 			/*If Frame format is 16 bit*/
 			{
-				p_spi_x->SPI_DR =  *((uint16_t*)pTxbuffer);
+				p_spi_x->SPI_DR = *((uint16_t*)pTxbuffer);
 				len = len-2;
 				(uint16_t*)pTxbuffer++;
 				/*

@@ -38,10 +38,10 @@
 /******************************************************
 				1.3.GPIO pin speed modes
 *******************************************************/
-#define 	GPIO_SPPED_LOW			0
-#define 	GPIO_SPPED_MEDIUM		1
-#define 	GPIO_SPPED_FAST			2
-#define 	GPIO_SPPED_HIGH			3
+#define 	GPIO_SPEED_LOW			0
+#define 	GPIO_SPEED_MEDIUM		1
+#define 	GPIO_SPEED_FAST			2
+#define 	GPIO_SPEED_HIGH			3
 
 /******************************************************
 				1.4.GPIO pin pull up/down  modes
@@ -142,11 +142,7 @@ uint8_t gpio_read_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
  */
 uint16_t gpio_read_port(GPIO_RegDef_t *pGPIOx);
 /* Writes data to GPIO single pin
- * Arguments:
- * ==============
- *  		*pGPIOx 	:	pointer to structure address, contains all relevant data regard to GPIOx peripheral.
- *  		PinNumber	:	pin number to read the data from.
- *  		value		:	value to be written
+
  */
 void gpio_write_to_pin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value);
 /* Reads data from GPIO single pin

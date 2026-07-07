@@ -163,8 +163,8 @@ void gpio_init(GPIO_Handle_t *pGPIOHandle)
 		SYSCFG_CLK_EN();
 		uint32_t exticr_reg = pGPIOHandle->GPIO_PinCfng.PinNumber/4;
 		uint32_t exticr_position = pGPIOHandle->GPIO_PinCfng.PinNumber%4;
-		SYSCFG->EXTICR[exticr_reg ] &= ~(value<<4*exticr_position);
-		SYSCFG->EXTICR[exticr_reg ] |= value<<4*exticr_position;
+		SYSCFG->EXTICR[exticr_reg ] &= ~(0xF << (4 * exticr_position)); // Clear the 4 bits
+		SYSCFG->EXTICR[exticr_reg ] |= (value << (4 * exticr_position)); // Write the port value
 
 	}
 

@@ -1,0 +1,35 @@
+# --- Build Artifacts ---
+# Ignore the entire build output directory (STM32CubeIDE usually uses 'Debug' and 'Release')
+/[Dd]ebug/
+/[Rr]elease/
+*.o
+*.su
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.lst
+
+# --- IDE and Toolchain Specifics ---
+# Ignore local workspace settings but keep project definitions
+.metadata/
+.settings/
+*.launch
+
+# If using Keil MDK:
+*.uvguix.*
+*.uv2.bak
+*.pjt.bak
+Listings/
+Objects/
+
+# If using IAR:
+Debug/
+Release/
+*.ewt
+*.dep
+
+# --- OS temporary files ---
+.DS_Store
+Thumbs.db

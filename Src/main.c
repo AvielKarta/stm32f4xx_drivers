@@ -35,44 +35,64 @@ void gpio_driver_function1(GPIO_Handle_t *green_led, GPIO_Handle_t *orange_led, 
 
 int main(void)
 {
-    GPIO_Handle_t green_led, orange_led, red_led, blue_led, irq_pin;
+	TMR6_CLK_EN();
+	TMR6->TIMx_PSC = 41999;
+	TMR6->TIMx_ARR = 1999;
+	TMR6->TIMx_DIER |= (1 << 0);
+	*NVIC_ISER1 |= (1 << 22);
+	GPIO_Handle_t green_led, orange_led, red_led, blue_led;
+	gpio_driver_function1(&green_led, &orange_led, &red_led, &blue_led);
+
+//	GPIO_Handle_t green_led, orange_led, red_led, blue_led, irq_pin;
 
     // FIX: Pass the addresses (&) of the handles into the function
-    gpio_driver_function1(&green_led, &orange_led, &red_led, &blue_led);
+//    gpio_driver_function1(&green_led, &orange_led, &red_led, &blue_led);
 
     // This part is correct because you are explicitly passing the address here
-    gpio_configure_pin(&irq_pin, GPIOA, 0, GPIO_MODE_IRQ_RT, GPIO_SPEED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
-    gpio_init(&irq_pin);
+//    gpio_configure_pin(&irq_pin, GPIOA, 0, GPIO_MODE_IRQ_RT, GPIO_SPEED_FAST, GPIO_OUT_MODE_PP, GPIO_DIS_PUPD, 0);
+//    gpio_init(&irq_pin);
 
-    gpio_irq_set(EXTI0);
-    gpio_irq_priority(EXTI0, 15);
-
+//    gpio_irq_set(EXTI0);
+//    gpio_irq_priority(EXTI0, 15);
+	TMR6->TIMx_CR1 |= (1 << 0);
     while(1)
     {
-        gpio_toggle_pin(GPIOD, 12);
-        delay1(ext_timeout);
-        gpio_toggle_pin(GPIOD, 13);
-        delay1(ext_timeout);
-        gpio_toggle_pin(GPIOD, 14);
-        delay1(ext_timeout);
-        gpio_toggle_pin(GPIOD, 15);
-        delay1(ext_timeout);
+//        gpio_toggle_pin(GPIOD, 12);
+//        delay1(ext_timeout);
+//        gpio_toggle_pin(GPIOD, 13);
+//        delay1(ext_timeout);
+//        gpio_toggle_pin(GPIOD, 14);
+//        delay1(ext_timeout);
+//        gpio_toggle_pin(GPIOD, 15);
+//        delay1(ext_timeout);
     }
 
     return 0;
 }
 
-void EXTI0_IRQHandler(void)
-{
-    // 1. Clear the pending register flag in hardware
-    gpio_irq_handler(0); // Pin 0
-    if (ext_timeout < 10000)
-    {
-    	ext_timeout = MS;
-    }
-    else
-    {
-    	ext_timeout = ext_timeout/2;
-    }
+//void EXTI0_IRQHandler(void)
+//{
+//    // 1. Clear the pending register flag in hardware
+//    gpio_irq_handler(0); // Pin 0
+//    if (ext_timeout < 10000)
+//    {
+//    	ext_timeout = MS;
+//    }
+//    else
+//    {
+//    	ext_timeout = ext_timeout/2;
+//    }
+//
+//}
 
+void TIM6_DAC_IRQHandler(void) {
+
+    // 1. Check if the Update Interrupt Flag (UIF) is set in the Status Register (SR)
+    if (TMR6->TIMx_SR & (1 << 0)) {
+
+        // 2. Clear the UIF flag by writing 0 to bit 0
+        TMR6->TIMx_SR &= ~(1 << 0);
+
+        gpio_toggle_pin(GPIOD, 12);
+    }
 }

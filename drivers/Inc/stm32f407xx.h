@@ -87,6 +87,18 @@
 #define 	GPIOI					((GPIO_RegDef_t*) GPIOI_BASE)
 
 /*------------------------------------------------------
+3.1.1.3 TIMERS
+------------------------------------------------------*/
+#define TMR2 ((TMR_RegDef_t*) TIM2_BASE)
+#define TMR3 ((TMR_RegDef_t*) TIM3_BASE)
+#define TMR4 ((TMR_RegDef_t*) TIM4_BASE)
+#define TMR5 ((TMR_RegDef_t*) TIM5_BASE)
+#define TMR6 ((TMR_RegDef_t*) TIM6_BASE)
+#define TMR7 ((TMR_RegDef_t*) TIM7_BASE)
+#define TMR12 ((TMR_RegDef_t*) TIM12_BASE)
+#define TMR13 ((TMR_RegDef_t*) TIM13_BASE)
+
+/*------------------------------------------------------
 3.1.2 RCC
 ------------------------------------------------------
 3.1.2.1 RCC addresses
@@ -130,6 +142,20 @@
 #define 	UART5_BASE				(AHB1_BUS_BASE + 0x5000)
 
 /*----------------------------------------------------
+3.3.3 TIMERS addresses
+------------------------------------------------------*/
+
+#define 	TIM2_BASE				(APB1_BUS_BASE + 0x0000)
+#define 	TIM3_BASE				(APB1_BUS_BASE + 0x0400)
+#define 	TIM4_BASE				(APB1_BUS_BASE + 0x0800)
+#define 	TIM5_BASE				(APB1_BUS_BASE + 0x0C00)
+#define 	TIM6_BASE				(APB1_BUS_BASE + 0x1000)
+#define 	TIM7_BASE				(APB1_BUS_BASE + 0x1400)
+#define 	TIM12_BASE				(APB1_BUS_BASE + 0x1800)
+#define 	TIM13_BASE				(APB1_BUS_BASE + 0x1C00)
+
+
+/*----------------------------------------------------
 3.4 APB2 peripherals addresses
 ------------------------------------------------------*/
 
@@ -139,6 +165,8 @@
 #define 	SYSCFG_BASE				(APB2_BUS_BASE + 0x3800)
 #define 	USART1_BASE				(APB2_BUS_BASE + 0x1000)
 #define 	USART6_BASE				(APB2_BUS_BASE + 0x1400)
+
+
 
 /*******************************************************************************************
 				4. Peripheral registers structures and pointers macros and initializations
@@ -310,6 +338,20 @@ typedef struct{
 }SPI_RegDef_t;
 
 
+typedef struct{
+	__vo uint32_t TIMx_CR1;      /* Timer control register 1        Address offset: 0x00 */
+	__vo uint32_t TIMx_CR2;      /* Timer control register 2        Address offset: 0x04 */
+	__vo uint32_t RESERVED1;     /* Reserved                        Address offset: 0x08 */
+	__vo uint32_t TIMx_DIER;     /* DMA/Interrupt enable register   Address offset: 0x0C */
+	__vo uint32_t TIMx_SR;       /* Status register                 Address offset: 0x10 */
+	__vo uint32_t TIMx_EGR;      /* Event generation register       Address offset: 0x14 */
+	__vo uint32_t RESERVED2;     /* Reserved                        Address offset: 0x18 */
+	__vo uint32_t RESERVED3;     /* Reserved                        Address offset: 0x1C */
+	__vo uint32_t RESERVED4;     /* Reserved                        Address offset: 0x20 */
+	__vo uint32_t TIMx_CNT;      /* Counter register                Address offset: 0x24 */
+	__vo uint32_t TIMx_PSC;      /* Prescaler register              Address offset: 0x28 */
+	__vo uint32_t TIMx_ARR;      /* Auto-reload register            Address offset: 0x2C */
+}TMR_RegDef_t;
 
 
 #define 	SPI1					((SPI_RegDef_t*) SPI1_BASE)
@@ -395,6 +437,19 @@ typedef struct{
 #define EXTI4 			10 					 /*Address 0x0000 0068*/
 #define EXTI9_5 		23 					 /*Address 0x0000 009c*/
 #define EXTI10_15 		40 					 /*Address 0x0000 00e0*/
+
+/*******************************************************************************************
+				6. TIMERS ()
+********************************************************************************************/
+
+#define TMR2_CLK_EN() 					(RCC->APB1ENR |= (1 << 0)) // Enable TIM2 clock
+#define TMR3_CLK_EN() 					(RCC->APB1ENR |= (1 << 1)) // Enable TIM3 clock
+#define TMR4_CLK_EN() 					(RCC->APB1ENR |= (1 << 2)) // Enable TIM4 clock
+#define TMR5_CLK_EN() 					(RCC->APB1ENR |= (1 << 3)) // Enable TIM5 clock
+#define TMR6_CLK_EN() 					(RCC->APB1ENR |= (1 << 4)) // Enable TIM6 clock
+#define TMR7_CLK_EN() 					(RCC->APB1ENR |= (1 << 5)) // Enable TIM7 clock
+#define TMR12_CLK_EN() 					(RCC->APB1ENR |= (1 << 6)) // Enable TIM12 clock
+#define TMR13_CLK_EN() 					(RCC->APB1ENR |= (1 << 7)) // Enable TIM13 clock
 
 
 

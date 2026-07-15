@@ -190,7 +190,7 @@ typedef struct
 *******************************************************/
 typedef struct
 {
-	SPI_RegDef_t 		*p_spi_x;		/*Base address of the SPIx base address*/
+	SPI_RegDef_t*		p_spi_x;		/*Base address of the SPIx base address*/
 	SPI_Config_t 		spi_config;	/**/
 }SPI_Handle_t;
 

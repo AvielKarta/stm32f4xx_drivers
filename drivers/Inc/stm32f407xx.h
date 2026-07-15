@@ -338,6 +338,29 @@ typedef struct{
 }SPI_RegDef_t;
 
 
+
+
+/*----------------------------------------------------
+4.3.1.3 USART - Registers structures
+------------------------------------------------------*/
+
+typedef struct{
+	__vo uint32_t UART_SR;       /* USART status register          		Address offset: 0x00 */
+	__vo uint32_t UART_DR;       /* USART data register        			Address offset: 0x04 */
+	__vo uint32_t UART_BRR;      /* USART baud rate register       		Address offset: 0x08 */
+	__vo uint32_t UART_CR1;      /* USART control register 1   			Address offset: 0x0C */
+	__vo uint32_t UART_CR2;      /* USART control register 2       		Address offset: 0x10 */
+	__vo uint32_t UART_CR3;      /* USART control register 3               Address offset: 0x14 */
+	__vo uint32_t UART_GTPR;     /* Guard time and prescaler registe       Address offset: 0x18 */
+}UartRegisters_t;
+
+
+
+
+/*----------------------------------------------------
+4.3.1.3 TIMER - Registers structures
+------------------------------------------------------*/
+
 typedef struct{
 	__vo uint32_t TIMx_CR1;      /* Timer control register 1        Address offset: 0x00 */
 	__vo uint32_t TIMx_CR2;      /* Timer control register 2        Address offset: 0x04 */
@@ -354,10 +377,22 @@ typedef struct{
 }TMR_RegDef_t;
 
 
+/*----------------------------------------------------
+4.3.1.1 SPI - Registers addresses
+------------------------------------------------------*/
+
 #define 	SPI1					((SPI_RegDef_t*) SPI1_BASE)
 #define 	SPI2					((SPI_RegDef_t*) SPI2_BASE)
 #define 	SPI3					((SPI_RegDef_t*) SPI3_BASE)
 #define 	SPI4					((SPI_RegDef_t*) SPI4_BASE)
+
+#define 	USART1					((UartRegisters_t*) USART1_BASE)
+#define 	USART2					((UartRegisters_t*) USART2_BASE)
+#define 	USART3					((UartRegisters_t*) USART3_BASE)
+#define 	UART4					((UartRegisters_t*) UART4_BASE)
+#define 	UART5					((UartRegisters_t*) UART5_BASE)
+#define 	USART6					((UartRegisters_t*) USART6_BASE)
+
 
 /*----------------------------------------------------
 4.3.2.1 SPI - CLK Enables\Disable
